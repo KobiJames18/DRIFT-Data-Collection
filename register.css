@@ -1,0 +1,285 @@
+/* ---------- REGISTRATION HERO ---------- */
+.reg-hero {
+  padding: 150px 24px 60px;
+  text-align: center;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.reg-title {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: clamp(36px, 7vw, 64px);
+  line-height: 0.95;
+  margin-top: 12px;
+}
+
+.reg-sub {
+  margin-top: 18px;
+  color: var(--gray);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ---------- FORM SECTION ---------- */
+.reg-form-section {
+  padding: 20px 24px 140px;
+  display: flex;
+  justify-content: center;
+}
+
+.reg-form {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.field-row {
+  display: flex;
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .field-row { flex-direction: column; }
+}
+
+label {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.optional-tag {
+  color: var(--gray);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  margin-left: 6px;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+select,
+textarea {
+  background: rgba(244,244,242,0.04);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 14px 16px;
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 90px;
+  font-family: 'Inter', sans-serif;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(244,244,242,0.35);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--blue);
+  background: rgba(244,244,242,0.06);
+}
+
+input:invalid:not(:placeholder-shown):not(:focus) {
+  border-color: var(--red);
+}
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1L6 6L11 1' stroke='%238c8c8c' stroke-width='1.5' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+
+select option {
+  background: var(--black-deep);
+  color: var(--white);
+}
+
+.ticket-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 12px 20px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--white);
+  background: rgba(244,244,242,0.03);
+}
+
+.ticket-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+/* ---------- CHECKBOX ---------- */
+.checkbox-field {
+  gap: 6px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  text-transform: none;
+  font-family: 'Inter', sans-serif;
+}
+
+.checkbox-label input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox-box {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--line);
+  border-radius: 4px;
+  margin-top: 2px;
+  position: relative;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.checkbox-label input:checked ~ .checkbox-box {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+.checkbox-label input:checked ~ .checkbox-box::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--white);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-text {
+  font-size: 14px;
+  color: var(--gray);
+  line-height: 1.5;
+}
+
+/* ---------- HONEYPOT (hidden from real users, bots often fill it) ---------- */
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* ---------- ERRORS ---------- */
+.error-msg {
+  display: none;
+  font-size: 12px;
+  color: var(--red);
+  font-family: 'Space Mono', monospace;
+}
+
+.field.has-error input,
+.field.has-error select {
+  border-color: var(--red);
+}
+
+.field.has-error .error-msg {
+  display: block;
+}
+
+.checkbox-field.has-error .error-msg {
+  display: block;
+}
+
+/* ---------- SUBMIT ---------- */
+.submit-btn {
+  margin-top: 6px;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+}
+
+.form-note {
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--gray);
+  line-height: 1.6;
+}
+
+/* ---------- SUCCESS PANEL ---------- */
+.success-panel {
+  width: 100%;
+  max-width: 560px;
+  text-align: center;
+  padding: 50px 30px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(244,244,242,0.02);
+}
+
+.success-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: var(--red);
+  color: var(--white);
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-panel h2 {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: 28px;
+  margin-bottom: 14px;
+}
+
+.success-panel h2 span {
+  color: var(--blue);
+}
+
+.success-panel p {
+  color: var(--gray);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
