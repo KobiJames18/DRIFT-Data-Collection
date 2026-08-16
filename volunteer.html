@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volunteer DRIFT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="register.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-mark">
+    <img src="images/drift header logo.jpg" alt="DRIFT" class="nav-logo">
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#about">About</a>
+    <a href="register.html">Register</a>
+  </div>
+</nav>
+
+<section class="reg-hero">
+  <div class="eyebrow">Join the Crew</div>
+  <h1 class="reg-title">Volunteer for DRIFT</h1>
+  <p class="reg-sub">Want to be part of making DRIFT happen? Fill in your details below. We'll reach out directly to let you know if you're accepted.</p>
+</section>
+
+<section class="reg-form-section">
+  <form id="volunteer-form" class="reg-form" novalidate>
+
+    <div class="field">
+      <label for="fullName">Full Name</label>
+      <input type="text" id="fullName" name="fullName" placeholder="e.g. DRIFT" required>
+      <span class="error-msg" data-for="fullName">Please enter your full name.</span>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="e.g. 076 463 909" required>
+        <span class="error-msg" data-for="phone">Please enter a valid phone number.</span>
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="e.g. DRIFT@email.com" required>
+        <span class="error-msg" data-for="email">Please enter a valid email address.</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="location">Location</label>
+      <input type="text" id="location" name="location" placeholder="e.g. Freetown" required>
+      <span class="error-msg" data-for="location">Please enter your location.</span>
+    </div>
+
+    <div class="field">
+      <label for="role">Preferred Role</label>
+      <select id="role" name="role" required>
+        <option value="" disabled selected>Select a role</option>
+        <option value="Security">Security</option>
+        <option value="Drink Sales">Drink Sales</option>
+        <option value="Ticket Sales">Ticket Sales</option>
+        <option value="Check-in Staff">Check in Staff</option>
+        <option value="Setup Crew">Setup Crew</option>
+        <option value="Ushers/Crowd Guide">Crowd Guide</option>
+        <option value="Cleanup Crew">Cleanup Crew</option>
+        <option value="Other">Other</option>
+      </select>
+      <span class="error-msg" data-for="role">Please select a role.</span>
+    </div>
+
+    <div class="field" id="otherRoleField" hidden>
+      <label for="otherRole">Tell us what you'd like to help with</label>
+      <input type="text" id="otherRole" name="otherRole" placeholder="e.g. Photography, MC support...">
+    </div>
+
+    <div class="field">
+      <label for="reason">Why do you want to volunteer? <span class="optional-tag">Optional</span></label>
+      <textarea id="reason" name="reason" rows="4" placeholder="Tell us a bit about yourself..."></textarea>
+    </div>
+
+    <div class="field checkbox-field">
+      <label class="checkbox-label">
+        <input type="checkbox" id="ageConfirm" name="ageConfirm" required>
+        <span class="checkbox-box"></span>
+        <span class="checkbox-text">I confirm I am 18 years or older.</span>
+      </label>
+      <span class="error-msg" data-for="ageConfirm">You must confirm you're 18+ to apply.</span>
+    </div>
+
+    <!-- Honeypot field: invisible to real people -->
+    <div class="hp-field" aria-hidden="true">
+      <label for="website">Website</label>
+      <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+    </div>
+
+    <button type="submit" class="btn submit-btn">Submit Application</button>
+
+    <p class="form-note">This form isn't connected to the database yet — that's coming up next. Submitting now just checks your entries are valid.</p>
+  </form>
+
+  <div id="success-panel" class="success-panel" hidden>
+    <div class="success-icon">✓</div>
+    <h2>Thanks, <span id="successName"></span>.</h2>
+    <p>Your application to volunteer for DRIFT has been received. We'll reach out to your phone or email once applications are reviewed.</p>
+    <a href="index.html" class="btn">Back to Home</a>
+  </div>
+</section>
+
+<footer>
+  DRIFT © 2027 18+ Event All Rights Reserved
+</footer>
+
+<script src="volunteer.js"></script>
+
+</body>
+</html>
