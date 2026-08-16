@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register — DRIFT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="register.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-mark">
+    <img src="images/drift header logo.jpg" alt="DRIFT" class="nav-logo">
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#about">About</a>
+    <a href="volunteer.html">Volunteer</a>
+  </div>
+</nav>
+
+<section class="reg-hero">
+  <div class="eyebrow">Registration</div>
+  <h1 class="reg-title">Register for DRIFT</h1>
+  <p class="reg-sub">Fill in your details below. You'll get a unique registration ID once you're done save it, you'll need it at check-in.</p>
+</section>
+
+<section class="reg-form-section">
+  <form id="drift-form" class="reg-form" novalidate>
+
+    <div class="field">
+      <label for="fullName">Full Name</label>
+      <input type="text" id="fullName" name="fullName" placeholder="e.g. DRIFT " required>
+      <span class="error-msg" data-for="fullName">Please enter your full name.</span>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="e.g. 076 463 909" required>
+        <span class="error-msg" data-for="phone">Please enter a valid phone number.</span>
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="e.g. DRIFT@email.com" required>
+        <span class="error-msg" data-for="email">Please enter a valid email address.</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="gender">Gender</label>
+        <select id="gender" name="gender" required>
+          <option value="" disabled selected>Select one</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+        <span class="error-msg" data-for="gender">Please select an option.</span>
+      </div>
+
+      <div class="field">
+        <label for="location">Location</label>
+        <input type="text" id="location" name="location" placeholder="e.g. Freetown" required>
+        <span class="error-msg" data-for="location">Please enter your location.</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="org">School / Organization <span class="optional-tag">Optional</span></label>
+      <input type="text" id="org" name="org" placeholder="e.g. College of Digital Excellence">
+    </div>
+
+    <div class="field">
+      <label>Ticket Category</label>
+      <div class="ticket-badge">
+        <span class="ticket-dot"></span> Regular
+      </div>
+    </div>
+
+    <div class="field checkbox-field">
+      <label class="checkbox-label">
+        <input type="checkbox" id="ageConfirm" name="ageConfirm" required>
+        <span class="checkbox-box"></span>
+        <span class="checkbox-text">I confirm I am 18 years or older. DRIFT is strictly an 18+ event.</span>
+      </label>
+      <span class="error-msg" data-for="ageConfirm">You must confirm you're 18+ to register.</span>
+    </div>
+
+    <!-- Honeypot field: invisible to real people, bots often fill every input they find -->
+    <div class="hp-field" aria-hidden="true">
+      <label for="website">Website</label>
+      <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+    </div>
+
+    <button type="submit" class="btn submit-btn">Complete Registration</button>
+
+    <p class="form-note">This form isn't connected to the database yet that's the next step. Submitting now just checks your entries are valid.</p>
+  </form>
+
+  <div id="success-panel" class="success-panel" hidden>
+    <div class="success-icon">✓</div>
+    <h2>You're all set, <span id="successName"></span>.</h2>
+    <p>Once the database is connected, your registration ID will appear here something like <strong>DRIFT-JAN2027-0001</strong>.</p>
+    <a href="index.html" class="btn">Back to Home</a>
+  </div>
+</section>
+
+<footer>
+   DRIFT © 2027 18+ Event All Rights Reserved
+</footer>
+
+<script src="register.js"></script>
+
+</body>
+</html>
