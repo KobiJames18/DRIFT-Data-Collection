@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register — DRIFT</title>
+<title>Register DRIFT</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -18,14 +18,14 @@
   <div class="nav-links">
     <a href="index.html">Home</a>
     <a href="index.html#about">About</a>
-    <a href="volunteer.html">Volunteer</a>
+    <a href="index.html#follow">Follow</a>
   </div>
 </nav>
 
 <section class="reg-hero">
   <div class="eyebrow">Registration</div>
   <h1 class="reg-title">Register for DRIFT</h1>
-  <p class="reg-sub">Fill in your details below. You'll get a unique registration ID once you're done save it, you'll need it at check-in.</p>
+  <p class="reg-sub">Fill in your details below. You'll get a unique registration ID once you're done save it, you'll need it at check in.</p>
 </section>
 
 <section class="reg-form-section">
@@ -33,7 +33,7 @@
 
     <div class="field">
       <label for="fullName">Full Name</label>
-      <input type="text" id="fullName" name="fullName" placeholder="e.g. DRIFT " required>
+      <input type="text" id="fullName" name="fullName" placeholder="e.g. DRIFT" required>
       <span class="error-msg" data-for="fullName">Please enter your full name.</span>
     </div>
 
@@ -98,20 +98,20 @@
     </div>
 
     <button type="submit" class="btn submit-btn">Complete Registration</button>
-
-    <p class="form-note">This form isn't connected to the database yet that's the next step. Submitting now just checks your entries are valid.</p>
   </form>
 
   <div id="success-panel" class="success-panel" hidden>
     <div class="success-icon">✓</div>
     <h2>You're all set, <span id="successName"></span>.</h2>
-    <p>Once the database is connected, your registration ID will appear here something like <strong>DRIFT-JAN2027-0001</strong>.</p>
+    <p>Your registration ID is:</p>
+    <p class="reg-id-display" id="registrationId" style="font-family:'Space Mono',monospace; font-size:20px; color:var(--blue); margin-bottom:20px;"></p>
+    <p>Save this — you'll need it at check-in.</p>
     <a href="index.html" class="btn">Back to Home</a>
   </div>
 </section>
 
 <footer>
-   DRIFT © 2027 18+ Event All Rights Reserved
+  DRIFT © 2027 18+ Event All Rights Reserved
 </footer>
 
 <script src="register.js"></script>
