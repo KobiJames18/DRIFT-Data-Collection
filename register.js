@@ -2,11 +2,28 @@ const form = document.getElementById('drift-form');
 const successPanel = document.getElementById('success-panel');
 const successName = document.getElementById('successName');
 
+const SUPABASE_FUNCTION_URL = 'https://esuueahaoporkdyurwjr.supabase.co/functions/v1/register-participant';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVzdXVlYWhhb3BvcmtkeXVyd2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4ODA1NDMsImV4cCI6MjEwMjQ1NjU0M30.kHYPaCCq8VkDeSAqqBDjguMtbKqTDgJWbtuQqbut_6c';
+
 function setError(fieldEl, hasError) {
   fieldEl.classList.toggle('has-error', hasError);
 }
 
-form.addEventListener('submit', function (e) {
+function showSubmitError(message) {
+  let errorBox = document.getElementById('submit-error');
+  if (!errorBox) {
+    errorBox = document.createElement('p');
+    errorBox.id = 'submit-error';
+    errorBox.style.color = 'var(--red)';
+    errorBox.style.fontFamily = "'Space Mono', monospace";
+    errorBox.style.fontSize = '13px';
+    errorBox.style.textAlign = 'center';
+    form.insertBefore(errorBox, form.querySelector('.submit-btn'));
+  }
+  errorBox.textContent = message;
+}
+
+form.addEventListener('submit', async function (e) {
   e.preventDefault();
 
   // Honeypot check — if this hidden field has a value, it was almost certainly filled by a bot.
@@ -42,11 +59,54 @@ form.addEventListener('submit', function (e) {
     return;
   }
 
-  // No backend yet — show a placeholder success state
-  successName.textContent = form.elements['fullName'].value.trim().split(' ')[0];
-  form.hidden = true;
-  successPanel.hidden = false;
-  successPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Disable the button while we wait, so people can't double-submit
+  const submitBtn = form.querySelector('.submit-btn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
+
+  const payload = {
+    fullName: form.elements['fullName'].value.trim(),
+    phone: form.elements['phone'].value.trim(),
+    email: form.elements['email'].value.trim(),
+    gender: form.elements['gender'].value,
+    org: form.elements['org'].value.trim(),
+    location: form.elements['location'].value.trim(),
+    ageConfirm: form.elements['ageConfirm'].checked,
+    website: form.elements['website'].value, // honeypot, should be empty
+  };
+
+  try {
+    const response = await fetch(SUPABASE_FUNCTION_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      showSubmitError(result.error || 'Something went wrong. Please try again.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Complete Registration';
+      return;
+    }
+
+    // Real success — show the actual registration ID from the backend
+    successName.textContent = payload.fullName.split(' ')[0];
+    const regIdEl = document.getElementById('registrationId');
+    if (regIdEl) regIdEl.textContent = result.registrationId;
+    form.hidden = true;
+    successPanel.hidden = false;
+    successPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (err) {
+    console.error('Registration failed:', err);
+    showSubmitError('Could not connect. Please check your internet connection and try again.');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Complete Registration';
+  }
 });
 
 // Clear individual field errors as the person fixes them
