@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kobijames18.github.io/DRIFT-Data-Collection/sitemap.xml

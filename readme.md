@@ -1,8 +1,8 @@
 # DRIFT — Event Registration & Management System
 
-DRIFT is a real festival held in Sierra Leone, usually on New Year's Day (January 1st) and occasionally in June. This repository is the official website and data collection system for DRIFT built to handle online registration, volunteer sign ups, and (in progress) full event management including check in and admin tools.
+DRI-FT is a real festival held in Sierra Leone, usually on New Year's Day (January 1st) and occasionally in June. This repository is the official website and data collection system for DRI-FT built to handle online registration, volunteer sign ups, and (in progress) full event management including check in and admin tools.
 
-This project serves one purposes: it's the actual live system used to run DRIFT events.
+This project serves one purposes: it's the actual live system used to run DRI-FT events.
 
 **Live site:** https://kobijames18.github.io/DRIFT-Data-Collection/
 
@@ -44,7 +44,7 @@ This is an actively developed project, not a finished product. Right now:
 ## Project structure
 
 ```
-DRIFT-Data-Collection/
+DRI-FT-Data-Collection/
 ├── index.html          Homepage
 ├── register.html        Ticket registration form
 ├── volunteer.html       Volunteer sign-up form
@@ -68,8 +68,8 @@ Since this system will eventually handle real people's personal data (names, pho
 
 ## About
 
-Built by Kobi James Robert, a final year web development student at the College of Digital Excellence, Sierra Leone. DRIFT is a real event I help run.
-**Follow DRIFT:**
+Built by Kobi James Robert, a final year web development student at the College of Digital Excellence, Sierra Leone. DRI-FT is a real event I help run.
+**Follow DRI-FT:**
 - Instagram: [@driftparty_](https://www.instagram.com/driftparty_)
 - TikTok: [@drift.party3](https://www.tiktok.com/@drift.party3)
 - WhatsApp Channel: [DRIFT-FESTIVAL](https://whatsapp.com/channel/0029VaiPdHY8F2pJtJZIeS0X)
