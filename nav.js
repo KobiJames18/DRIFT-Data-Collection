@@ -1,4 +1,4 @@
-// Mobile hamburger menu toggle — shared across all pages
+// Mobile hamburger menu toggle shared across all pages
 document.addEventListener('DOMContentLoaded', function () {
   const toggle = document.querySelector('.nav-toggle');
   const links = document.querySelector('.nav-links');

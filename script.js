@@ -19,4 +19,4 @@
   }
 
   updateCountdown();
-  setInterval(updateCountdown, 1000);as
+  setInterval(updateCountdown, 1000);

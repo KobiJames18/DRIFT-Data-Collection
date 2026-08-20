@@ -33,7 +33,7 @@ roleSelect.addEventListener('change', function () {
 form.addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  // Honeypot check — silently stop if the hidden field was filled (bot behavior)
+  // Honeypot check silently stop if the hidden field was filled (bot behavior)
   const honeypot = form.elements['website'];
   if (honeypot && honeypot.value.trim() !== '') {
     return;
