@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Check Your Ticket DRI-FT</title>
+<meta name="description" content="Check if your DRI-FT ticket or registration ID is valid.">
+<link rel="canonical" href="https://kobijames18.github.io/DRIFT-Data-Collection/check-ticket.html">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="register.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-mark">
+    <img src="images/drift header logo.jpg" alt="DRIFT" class="nav-logo">
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="register.html">Register</a>
+  </div>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section class="reg-hero">
+  <div class="eyebrow">Ticket Check</div>
+  <h1 class="reg-title">Check Your Ticket</h1>
+  <p class="reg-sub">Bought a ticket in person, or registered online? Enter your registration ID below to confirm it's valid.</p>
+</section>
+
+<section class="reg-form-section">
+  <form id="check-form" class="reg-form" novalidate>
+    <div class="field">
+      <label for="regId">Registration ID</label>
+      <input type="text" id="regId" name="regId" placeholder="e.g. DRIFT-JAN2027-0001" required>
+    </div>
+
+    <button type="submit" class="btn submit-btn">Check Ticket</button>
+
+    <p class="form-note" id="check-error" style="color: var(--red); display: none;"></p>
+  </form>
+
+  <div id="result-panel" class="success-panel" hidden>
+    <div class="success-icon" id="result-icon">✓</div>
+    <h2 id="result-title"></h2>
+    <p id="result-detail"></p>
+    <a href="index.html" class="btn">Back to Home</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="gallery.html">Gallery</a>
+    <a href="faq.html">FAQ</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="terms-of-service.html">Terms of Service</a>
+  </div>
+  <p>DRI-FT © 2027 18+ Event All Rights Reserved</p>
+</footer>
+
+<script src="check-ticket.js"></script>
+<script src="nav.js"></script>
+
+</body>
+</html>
