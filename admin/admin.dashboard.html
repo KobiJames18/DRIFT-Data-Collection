@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard DRI-FT</title>
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="admin.dashboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<nav>
+  <a href="admin.dashboard.html" class="nav-mark">
+    <img src="../images/drift header logo.jpg" alt="DRIFT" class="nav-logo">
+  </a>
+  <div class="nav-links">
+    <span id="admin-email" class="mono admin-email-tag"></span>
+    <a href="#" id="logout-link">Log Out</a>
+  </div>
+</nav>
+
+<main class="dash-wrap" id="dash-main" hidden>
+
+  <section class="dash-header">
+    <div class="eyebrow">Admin</div>
+    <h1 class="dash-title">DRI-FT Dashboard</h1>
+  </section>
+
+  <section class="stat-strip" id="stat-strip">
+    <div class="stat-card">
+      <div class="stat-k">Registrants</div>
+      <div class="stat-v" id="stat-participants">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-k">Volunteers</div>
+      <div class="stat-v" id="stat-volunteers">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-k">Checked In</div>
+      <div class="stat-v" id="stat-checkins">—</div>
+    </div>
+  </section>
+
+  <section class="tab-bar">
+    <button class="tab-btn active" data-tab="participants">Registrants</button>
+    <button class="tab-btn" data-tab="volunteers">Volunteers</button>
+  </section>
+
+  <div class="table-toolbar">
+    <input type="text" id="search-box" class="search-box" placeholder="Search by name, email, or phone...">
+    <button class="btn refresh-btn" id="refresh-btn">Refresh</button>
+    <button class="btn add-ticket-btn" id="add-ticket-btn">+ Add Ticket (Cash Sale)</button>
+  </div>
+
+  <section id="loading-state" class="state-msg">Loading data...</section>
+  <section id="error-state" class="state-msg error-state" hidden></section>
+  <section id="empty-state" class="state-msg" hidden>No records found.</section>
+
+  <section class="table-scroll" id="participants-panel">
+    <table class="data-table" id="participants-table">
+      <thead>
+        <tr>
+          <th>Reg ID</th>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Gender</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="participants-tbody"></tbody>
+    </table>
+  </section>
+
+  <section class="table-scroll" id="volunteers-panel" hidden>
+    <table class="data-table" id="volunteers-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="volunteers-tbody"></tbody>
+    </table>
+  </section>
+
+</main>
+
+<!-- Edit modal, shared between both tables -->
+<div class="modal-backdrop" id="edit-modal-backdrop" hidden>
+  <div class="modal" id="edit-modal">
+    <h2 id="modal-title">Edit Record</h2>
+    <div id="modal-fields"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="modal-cancel">Cancel</button>
+      <button class="btn" id="modal-save">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete confirm modal -->
+<div class="modal-backdrop" id="delete-modal-backdrop" hidden>
+  <div class="modal modal-small">
+    <h2>Delete this record?</h2>
+    <p class="modal-warn">This can't be undone. <span id="delete-target-name"></span> will be permanently removed.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="delete-cancel">Cancel</button>
+      <button class="btn btn-danger" id="delete-confirm">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add ticket modal (cash sale) -->
+<div class="modal-backdrop" id="add-ticket-modal-backdrop" hidden>
+  <div class="modal">
+    <h2>Add Ticket (Cash Sale)</h2>
+    <p class="modal-warn">For someone who paid in person. This confirms the ticket immediately no review needed.</p>
+    <div class="modal-field">
+      <label for="add-fullName">Full Name</label>
+      <input type="text" id="add-fullName">
+    </div>
+    <div class="modal-field">
+      <label for="add-phone">Phone</label>
+      <input type="text" id="add-phone">
+    </div>
+    <div class="modal-field">
+      <label for="add-email">Email</label>
+      <input type="email" id="add-email">
+    </div>
+    <div class="modal-field">
+      <label for="add-gender">Gender</label>
+      <select id="add-gender">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label for="add-location">Location</label>
+      <input type="text" id="add-location">
+    </div>
+    <p class="form-note" id="add-ticket-error" style="color: var(--red); display: none;"></p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="add-ticket-cancel">Cancel</button>
+      <button class="btn" id="add-ticket-save">Add Ticket</button>
+    </div>
+  </div>
+</div>
+
+<script src="admin.dashboard.js"></script>
+</body>
+</html>

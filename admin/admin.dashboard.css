@@ -1,0 +1,303 @@
+.admin-email-tag {
+  font-size: 12px;
+  color: var(--gray);
+  margin-right: 24px;
+}
+
+.dash-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 120px 24px 100px;
+}
+
+.dash-header { margin-bottom: 36px; }
+
+.dash-title {
+  font-size: clamp(30px, 5vw, 48px);
+  margin-top: 8px;
+}
+
+/* ---------- STATS ---------- */
+.stat-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background: var(--black-deep);
+  padding: 28px 24px;
+}
+
+.stat-k {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 10px;
+}
+
+.stat-v {
+  font-family: 'Anton', sans-serif;
+  font-size: 36px;
+  color: var(--blue);
+}
+
+@media (max-width: 640px) {
+  .stat-strip { grid-template-columns: 1fr; }
+}
+
+/* ---------- TABS ---------- */
+.tab-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  color: var(--gray);
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 12px 18px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tab-btn.active,
+.tab-btn:hover {
+  color: var(--white);
+  border-bottom-color: var(--red);
+}
+
+/* ---------- TOOLBAR ---------- */
+.table-toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 220px;
+  background: rgba(244,244,242,0.04);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 12px 16px;
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-box:focus { border-color: var(--blue); }
+
+.refresh-btn {
+  margin-top: 0;
+  padding: 12px 24px;
+  font-size: 13px;
+}
+
+.add-ticket-btn {
+  margin-top: 0;
+  padding: 12px 24px;
+  font-size: 13px;
+  background: var(--blue);
+  color: var(--white);
+}
+
+/* ---------- STATE MESSAGES ---------- */
+.state-msg {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--gray);
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+}
+
+.error-state { color: var(--red); }
+
+/* ---------- TABLE ---------- */
+.table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 14px 16px;
+  background: rgba(244,244,242,0.04);
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 14px 16px;
+  border-top: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.data-table tbody tr:hover {
+  background: rgba(244,244,242,0.03);
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-registered, .status-approved { background: rgba(47,209,90,0.15); color: #2fd15a; }
+.status-pending { background: rgba(232,52,44,0.15); color: var(--red); }
+.status-rejected, .status-cancelled { background: rgba(140,140,140,0.2); color: var(--gray); }
+
+.row-actions .approve-btn { border-color: rgba(47,209,90,0.4); color: #2fd15a; }
+.row-actions .approve-btn:hover { border-color: #2fd15a; background: rgba(47,209,90,0.1); }
+.row-actions .reject-btn { border-color: rgba(232,52,44,0.4); color: var(--red); }
+.row-actions .reject-btn:hover { border-color: var(--red); background: rgba(232,52,44,0.1); }
+
+.row-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.row-actions button {
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--white);
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.row-actions button:hover { border-color: var(--blue); }
+.row-actions .del-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* ---------- MODAL ---------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5,5,5,0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  padding: 20px;
+}
+
+/* The hidden attribute must always win over display:flex above,
+   otherwise the modal shows on page load even when untriggered. */
+.modal-backdrop[hidden] {
+  display: none;
+}
+
+.modal {
+  background: var(--black-deep);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 32px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.modal-small { max-width: 400px; }
+
+.modal h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.modal-warn {
+  color: var(--gray);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.modal-field label {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+
+.modal-field input,
+.modal-field select {
+  background: rgba(244,244,242,0.04);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 10px 14px;
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  outline: none;
+}
+
+.modal-field input:focus,
+.modal-field select:focus { border-color: var(--blue); }
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn-ghost {
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--white);
+  margin-top: 0;
+  padding: 12px 28px;
+}
+
+.btn-danger {
+  background: var(--red);
+  color: var(--white);
+  margin-top: 0;
+  padding: 12px 28px;
+}
+
+.modal-actions .btn {
+  margin-top: 0;
+}
