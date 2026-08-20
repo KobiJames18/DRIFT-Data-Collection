@@ -26,7 +26,7 @@ function showSubmitError(message) {
 form.addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  // Honeypot check — if this hidden field has a value, it was almost certainly filled by a bot.
+  // Honeypot check if this hidden field has a value, it was almost certainly filled by a bot.
   // Silently stop here without telling the "user" anything went wrong (real people never see this field).
   const honeypot = form.elements['website'];
   if (honeypot && honeypot.value.trim() !== '') {
@@ -35,7 +35,7 @@ form.addEventListener('submit', async function (e) {
 
   let isValid = true;
 
-  // Text/email/select fields — required
+  // Text/email/select fields required
   const requiredFields = ['fullName', 'phone', 'email', 'gender', 'location'];
   requiredFields.forEach((name) => {
     const input = form.elements[name];
@@ -59,7 +59,7 @@ form.addEventListener('submit', async function (e) {
     return;
   }
 
-  // Disable the button while we wait, so people can't double-submit
+  // Disable the button while we wait, so people can't double submit
   const submitBtn = form.querySelector('.submit-btn');
   submitBtn.disabled = true;
   submitBtn.textContent = 'Submitting...';
@@ -94,7 +94,8 @@ form.addEventListener('submit', async function (e) {
       return;
     }
 
-    // Real success — show the actual registration ID from the backend
+    // Success — but this is now a PENDING submission, not an instantly confirmed ticket.
+    // Show the reference ID and set expectations that review/confirmation follows.
     successName.textContent = payload.fullName.split(' ')[0];
     const regIdEl = document.getElementById('registrationId');
     if (regIdEl) regIdEl.textContent = result.registrationId;

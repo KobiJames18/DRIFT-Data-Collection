@@ -29,11 +29,12 @@
   <a href="index.html" class="nav-mark">
     <img src="images/drift header logo.jpg" alt="DRIFT" class="nav-logo">
   </a>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="index.html#about">About</a>
-    <a href="index.html#follow">Follow</a>
-  </div>
+ <div class="nav-links">
+  <a href="index.html">Home</a>
+  <a href="index.html#about">About</a>
+  <a href="gallery.html">Gallery</a>   <!-- this is the new line -->
+  <a href="register.html">Register</a>
+</div>
   <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
@@ -42,7 +43,7 @@
 <section class="reg-hero">
   <div class="eyebrow">Registration</div>
   <h1 class="reg-title">Register for DRI-FT</h1>
-  <p class="reg-sub">Fill in your details below. You'll get a unique registration ID once you're done save it, you'll need it at check in.</p>
+  <p class="reg-sub">Fill in your details below. Submissions are reviewed before your ticket is confirmed you'll get a reference ID now, and we'll follow up once it's approved.</p>
 </section>
 
 <section class="reg-form-section">
@@ -50,7 +51,7 @@
 
     <div class="field">
       <label for="fullName">Full Name</label>
-      <input type="text" id="fullName" name="fullName" placeholder="e.g. DRI-FT" required>
+      <input type="text" id="fullName" name="fullName" placeholder="e.g. DRI-FT FES" required>
       <span class="error-msg" data-for="fullName">Please enter your full name.</span>
     </div>
 
@@ -114,15 +115,15 @@
       <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
     </div>
 
-    <button type="submit" class="btn submit-btn">Complete Registration</button>
+    <button type="submit" class="btn submit-btn">Submit Registration</button>
   </form>
 
   <div id="success-panel" class="success-panel" hidden>
     <div class="success-icon">✓</div>
-    <h2>You're all set, <span id="successName"></span>.</h2>
-    <p>Your registration ID is:</p>
+    <h2>Thanks, <span id="successName"></span>. You're on the list.</h2>
+    <p>Your reference ID is:</p>
     <p class="reg-id-display" id="registrationId" style="font-family:'Space Mono',monospace; font-size:20px; color:var(--blue); margin-bottom:20px;"></p>
-    <p>Save this you'll need it at check-in.</p>
+    <p>Your registration is pending review. We'll reach out by phone or email once it's approved save this reference ID until then.</p>
     <a href="index.html" class="btn">Back to Home</a>
   </div>
 </section>
