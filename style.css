@@ -557,7 +557,56 @@
     text-transform: uppercase;
   }
 
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .footer-links a {
+    color: var(--gray);
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover {
+    color: var(--white);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .btn { transition: none; }
+  }
+  /* ---------- SPONSORS ---------- */
+  .sponsors-section {
+    padding: 60px 24px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+  }
+
+  .sponsors-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-top: 24px;
+  }
+
+  .footer-sponsors-strip {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* Safety net: no element should be able to force horizontal scroll on mobile */
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
   }

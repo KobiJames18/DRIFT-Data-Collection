@@ -4,6 +4,7 @@
   text-align: center;
   max-width: 620px;
   margin: 0 auto;
+  overflow-x: hidden;
 }
 
 .reg-title {
@@ -81,6 +82,34 @@ textarea {
   font-size: 15px;
   outline: none;
   transition: border-color 0.2s, background 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input[type="file"] {
+  background: rgba(244,244,242,0.04);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 12px;
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  outline: none;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  background: var(--white);
+  color: var(--black);
+  border: none;
+  border-radius: 3px;
+  padding: 8px 14px;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  margin-right: 12px;
+  cursor: pointer;
 }
 
 textarea {

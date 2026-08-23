@@ -58,7 +58,7 @@ form.addEventListener('submit', async function (e) {
     if (!result.found) {
       resultIcon.textContent = '✕';
       resultTitle.textContent = 'Ticket not found';
-      resultDetail.textContent = "We couldn't find a registration with that ID. Double-check it and try again, or contact us.";
+      resultDetail.textContent = "We couldn't find a registration with that ID. Double check it and try again, or contact us.";
     } else {
       const info = STATUS_MESSAGES[result.status] || { icon: '?', title: result.status, detail: '' };
       resultIcon.textContent = info.icon;

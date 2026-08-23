@@ -30,11 +30,11 @@
     <img src="images/drift header logo.jpg" alt="DRIFT" class="nav-logo">
   </a>
   <div class="nav-links">
-  <a href="index.html">Home</a>
-  <a href="index.html#about">About</a>
-  <a href="gallery.html">Gallery</a>   <!-- this is the new line -->
-  <a href="register.html">Register</a>
-</div>
+    <a href="index.html">Home</a>
+    <a href="index.html#about">About</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="register.html">Register</a>
+  </div>
   <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
@@ -82,8 +82,9 @@
         <option value="Security">Security</option>
         <option value="Drink Sales">Drink Sales</option>
         <option value="Ticket Sales">Ticket Sales</option>
-        <option value="Check-in Staff">Check in Staff</option>
+        <option value="Check-in Staff">Check-in Staff</option>
         <option value="Setup Crew">Setup Crew</option>
+        <option value="Crowd Guide">Crowd Guide</option>
         <option value="Cleanup Crew">Cleanup Crew</option>
         <option value="Other">Other</option>
       </select>
@@ -127,11 +128,20 @@
 </section>
 
 <footer>
-  DRI-FT © 2027 18+ Event All Rights Reserved
+  <div class="footer-links">
+    <a href="gallery.html">Gallery</a>
+    <a href="faq.html">FAQ</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="terms-of-service.html">Terms of Service</a>
+  </div>
+  <div class="footer-sponsors-strip" id="footer-sponsors-strip" hidden></div>
+  <p>DRI-FT © 2027 18+ Event All Rights Reserved</p>
 </footer>
 
 <script src="volunteer.js"></script>
 <script src="nav.js"></script>
+<script src="sponsors.js"></script>
+<script src="ownership-guard.js"></script>
 
 </body>
 </html>

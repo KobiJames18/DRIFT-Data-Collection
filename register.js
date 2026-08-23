@@ -99,6 +99,12 @@ form.addEventListener('submit', async function (e) {
     successName.textContent = payload.fullName.split(' ')[0];
     const regIdEl = document.getElementById('registrationId');
     if (regIdEl) regIdEl.textContent = result.registrationId;
+
+    const qrEl = document.getElementById('ticketQr');
+    if (qrEl && result.registrationId) {
+      qrEl.src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(result.registrationId)}`;
+    }
+
     form.hidden = true;
     successPanel.hidden = false;
     successPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });

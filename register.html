@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register for DRI-FT New Year's Day Festival</title>
+<title>Register for DRI-FT Festival</title>
 <meta name="description" content="Register for DRI-FT, Sierra Leone's biggest New Year's Day music party festival. Get your unique registration ID. 18+ only.">
 <link rel="canonical" href="https://kobijames18.github.io/DRIFT-Data-Collection/register.html">
 
@@ -29,12 +29,12 @@
   <a href="index.html" class="nav-mark">
     <img src="images/drift header logo.jpg" alt="DRIFT" class="nav-logo">
   </a>
- <div class="nav-links">
-  <a href="index.html">Home</a>
-  <a href="index.html#about">About</a>
-  <a href="gallery.html">Gallery</a>   <!-- this is the new line -->
-  <a href="register.html">Register</a>
-</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#about">About</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="index.html#follow">Follow</a>
+  </div>
   <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
@@ -51,7 +51,7 @@
 
     <div class="field">
       <label for="fullName">Full Name</label>
-      <input type="text" id="fullName" name="fullName" placeholder="e.g. DRI-FT FES" required>
+      <input type="text" id="fullName" name="fullName" placeholder="e.g. DRI-FT" required>
       <span class="error-msg" data-for="fullName">Please enter your full name.</span>
     </div>
 
@@ -123,17 +123,27 @@
     <h2>Thanks, <span id="successName"></span>. You're on the list.</h2>
     <p>Your reference ID is:</p>
     <p class="reg-id-display" id="registrationId" style="font-family:'Space Mono',monospace; font-size:20px; color:var(--blue); margin-bottom:20px;"></p>
-    <p>Your registration is pending review. We'll reach out by phone or email once it's approved save this reference ID until then.</p>
+    <img id="ticketQr" src="" alt="Your ticket QR code" style="width: 160px; height: 160px; margin: 0 auto 20px; display: block; background: white; padding: 8px; border-radius: 6px;">
+    <p>Your registration is pending review. We'll reach out by phone or email once it's approved save this reference ID and QR code until then.</p>
     <a href="index.html" class="btn">Back to Home</a>
   </div>
 </section>
 
 <footer>
-  DRI-FT © 2027 18+ Event All Rights Reserved
+  <div class="footer-links">
+    <a href="gallery.html">Gallery</a>
+    <a href="faq.html">FAQ</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="terms-of-service.html">Terms of Service</a>
+  </div>
+  <div class="footer-sponsors-strip" id="footer-sponsors-strip" hidden></div>
+  <p>DRI-FT © 2027 18+ Event All Rights Reserved</p>
 </footer>
 
 <script src="register.js"></script>
 <script src="nav.js"></script>
+<script src="sponsors.js"></script>
+<script src="ownership-guard.js"></script>
 
 </body>
 </html>

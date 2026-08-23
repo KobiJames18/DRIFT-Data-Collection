@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activate Your Ticket DRI-FT</title>
+<meta name="description" content="Activate your physical DRI-FT ticket by entering your ticket code and PIN.">
+<link rel="canonical" href="https://kobijames18.github.io/DRIFT-Data-Collection/activate-ticket.html">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="register.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-mark">
+    <img src="images/drift header logo.jpg" alt="DRIFT" class="nav-logo">
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="gallery.html">Gallery</a>
+  </div>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section class="reg-hero">
+  <div class="eyebrow">Physical Ticket</div>
+  <h1 class="reg-title">Activate Your Ticket</h1>
+  <p class="reg-sub">Bought a physical ticket? Enter your ticket code below to register it.</p>
+</section>
+
+<section class="reg-form-section">
+
+  <!-- STEP 1: Ticket code entry -->
+  <form id="step-code-form" class="reg-form" novalidate>
+    <div class="field">
+      <label for="ticketCode">Ticket Code</label>
+      <input type="text" id="ticketCode" name="ticketCode" placeholder="e.g. DR-7K92-X81P" required>
+    </div>
+    <button type="submit" class="btn submit-btn">Continue</button>
+    <p class="form-note" id="step-code-error" style="color: var(--red); display: none;"></p>
+  </form>
+
+  <!-- STEP 2: PIN + registration details -->
+  <form id="step-details-form" class="reg-form" novalidate hidden>
+    <div class="field">
+      <label>Ticket Code</label>
+      <div class="ticket-badge"><span class="ticket-dot"></span> <span id="confirmedCode"></span></div>
+    </div>
+
+    <div class="field">
+      <label for="pin">Security PIN</label>
+      <input type="text" id="pin" name="pin" placeholder="6-digit PIN from your ticket" inputmode="numeric" maxlength="6" required>
+      <span class="error-msg" data-for="pin">Scratch off and enter the 6 digit PIN on your ticket.</span>
+    </div>
+
+    <div class="field">
+      <label for="fullName">Full Name</label>
+      <input type="text" id="fullName" name="fullName" required>
+      <span class="error-msg" data-for="fullName">Please enter your full name.</span>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" required>
+        <span class="error-msg" data-for="phone">Please enter a valid phone number.</span>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+        <span class="error-msg" data-for="email">Please enter a valid email address.</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="photoInput">Your Photo</label>
+      <input type="file" id="photoInput" accept="image/*" capture="user" required>
+      <span class="error-msg" data-for="photoInput">A photo is required for entry verification.</span>
+      <img id="photoPreview" style="display:none; margin-top: 12px; width: 120px; height: 120px; object-fit: cover; border-radius: 8px;">
+    </div>
+
+    <button type="submit" class="btn submit-btn">Complete Registration</button>
+    <p class="form-note" id="step-details-error" style="color: var(--red); display: none;"></p>
+  </form>
+
+  <!-- Success -->
+  <div id="success-panel" class="success-panel" hidden>
+    <div class="success-icon">✓</div>
+    <h2>You're all set!</h2>
+    <p>Your ticket is registered and confirmed. Bring your ticket (and your face!) to the door.</p>
+    <a href="index.html" class="btn">Back to Home</a>
+  </div>
+
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="gallery.html">Gallery</a>
+    <a href="faq.html">FAQ</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="terms-of-service.html">Terms of Service</a>
+  </div>
+  <p>DRI-FT © 2027 18+ Event All Rights Reserved</p>
+</footer>
+
+<script src="activate-ticket.js"></script>
+<script src="nav.js"></script>
+<script src="ownership-guard.js"></script>
+
+</body>
+</html>

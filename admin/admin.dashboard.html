@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard DRI-FT</title>
+<title>Admin Dashboard DRIFT</title>
 <meta name="robots" content="noindex, nofollow">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="admin.dashboard.css">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
 <body>
 
@@ -29,7 +30,7 @@
 
   <section class="dash-header">
     <div class="eyebrow">Admin</div>
-    <h1 class="dash-title">DRI-FT Dashboard</h1>
+    <h1 class="dash-title">DRIFT Dashboard</h1>
   </section>
 
   <section class="stat-strip" id="stat-strip">
@@ -50,12 +51,16 @@
   <section class="tab-bar">
     <button class="tab-btn active" data-tab="participants">Registrants</button>
     <button class="tab-btn" data-tab="volunteers">Volunteers</button>
+    <button class="tab-btn" data-tab="sponsors">Sponsors</button>
+    <button class="tab-btn" data-tab="checkin">Door Check-In</button>
+    <button class="tab-btn" data-tab="generate">Generate Tickets</button>
   </section>
 
   <div class="table-toolbar">
     <input type="text" id="search-box" class="search-box" placeholder="Search by name, email, or phone...">
     <button class="btn refresh-btn" id="refresh-btn">Refresh</button>
     <button class="btn add-ticket-btn" id="add-ticket-btn">+ Add Ticket (Cash Sale)</button>
+    <button class="btn add-sponsor-btn" id="add-sponsor-btn" hidden>+ Add Sponsor</button>
   </div>
 
   <section id="loading-state" class="state-msg">Loading data...</section>
@@ -95,6 +100,45 @@
       </thead>
       <tbody id="volunteers-tbody"></tbody>
     </table>
+  </section>
+
+  <section class="table-scroll" id="sponsors-panel" hidden>
+    <table class="data-table" id="sponsors-table">
+      <thead>
+        <tr>
+          <th>Logo</th>
+          <th>Name</th>
+          <th>Website</th>
+          <th>Order</th>
+          <th>Active</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="sponsors-tbody"></tbody>
+    </table>
+  </section>
+
+  <section id="checkin-panel" hidden class="checkin-panel">
+    <div class="checkin-search-row">
+      <input type="text" id="checkin-search-input" class="search-box" placeholder="Enter registration ID, e.g. DRIFT-JAN2027-0001">
+      <button class="btn" id="checkin-search-btn">Find</button>
+    </div>
+    <div class="checkin-scan-row">
+      <button class="btn btn-ghost" id="checkin-scan-toggle">📷 Scan QR Code Instead</button>
+    </div>
+    <div id="qr-reader" hidden></div>
+    <div id="checkin-result"></div>
+  </section>
+
+  <section id="generate-panel" hidden class="checkin-panel">
+    <p style="color: var(--gray); font-size: 13px; margin-bottom: 20px; text-align: center;">
+      Generate physical tickets before printing/selling them. Each gets a random code, a hidden 6 digit PIN, and a QR the PIN only appears once, right here, so write it down or print immediately.
+    </p>
+    <div class="checkin-search-row">
+      <input type="text" id="generate-count-input" class="search-box" placeholder="How many tickets? e.g. 20" value="10">
+      <button class="btn" id="generate-tickets-btn">Generate</button>
+    </div>
+    <div id="generate-result"></div>
   </section>
 
 </main>
@@ -156,6 +200,41 @@
     <div class="modal-actions">
       <button class="btn btn-ghost" id="add-ticket-cancel">Cancel</button>
       <button class="btn" id="add-ticket-save">Add Ticket</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit sponsor modal -->
+<div class="modal-backdrop" id="sponsor-modal-backdrop" hidden>
+  <div class="modal">
+    <h2 id="sponsor-modal-title">Add Sponsor</h2>
+    <div class="modal-field">
+      <label for="sponsor-name">Sponsor Name</label>
+      <input type="text" id="sponsor-name">
+    </div>
+    <div class="modal-field">
+      <label for="sponsor-logo">Logo Image URL</label>
+      <input type="text" id="sponsor-logo" placeholder="https://...">
+    </div>
+    <div class="modal-field">
+      <label for="sponsor-website">Website Link <span style="color: var(--gray); text-transform: none;">(optional)</span></label>
+      <input type="text" id="sponsor-website" placeholder="https://...">
+    </div>
+    <div class="modal-field">
+      <label for="sponsor-order">Display Order</label>
+      <input type="text" id="sponsor-order" placeholder="0 = first">
+    </div>
+    <div class="modal-field">
+      <label for="sponsor-active">Active</label>
+      <select id="sponsor-active">
+        <option value="true">Yes — show on site</option>
+        <option value="false">No — hidden</option>
+      </select>
+    </div>
+    <p class="form-note" id="sponsor-error" style="color: var(--red); display: none;"></p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="sponsor-cancel">Cancel</button>
+      <button class="btn" id="sponsor-save">Save Sponsor</button>
     </div>
   </div>
 </div>

@@ -143,6 +143,14 @@
   color: var(--white);
 }
 
+.add-sponsor-btn {
+  margin-top: 0;
+  padding: 12px 24px;
+  font-size: 13px;
+  background: #2fd15a;
+  color: var(--black-deep);
+}
+
 /* ---------- STATE MESSAGES ---------- */
 .state-msg {
   text-align: center;
@@ -327,4 +335,100 @@
 
 .modal-actions .btn {
   margin-top: 0;
+}
+
+/* ---------- DOOR CHECK-IN ---------- */
+.checkin-panel {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.checkin-search-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.checkin-search-row .search-box {
+  flex: 1;
+}
+
+.checkin-search-row .btn {
+  margin-top: 0;
+  padding: 12px 28px;
+  font-size: 13px;
+}
+
+.checkin-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 28px;
+  text-align: center;
+}
+
+.checkin-name {
+  font-family: 'Anton', sans-serif;
+  font-size: 26px;
+  text-transform: uppercase;
+  margin: 12px 0 6px;
+}
+
+.checkin-id {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--gray);
+  margin-bottom: 20px;
+}
+
+.checkin-btn-in {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  background: #2fd15a;
+  color: var(--black-deep);
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: 16px;
+  padding: 16px;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.checkin-btn-in:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.checkin-already {
+  color: #2fd15a;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.checkin-warn {
+  color: var(--red);
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.checkin-scan-row {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.checkin-scan-row .btn {
+  margin-top: 0;
+  padding: 12px 28px;
+  font-size: 13px;
+  width: 100%;
+}
+
+#qr-reader {
+  max-width: 340px;
+  margin: 0 auto 24px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--line);
 }
