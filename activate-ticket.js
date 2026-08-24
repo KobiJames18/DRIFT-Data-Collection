@@ -69,17 +69,42 @@ stepCodeForm.addEventListener('submit', async function (e) {
   }
 });
 
-// ---------- Photo preview ----------
+// ---------- Photo preview + compression ----------
+// Phone camera photos are often 5-15MB, far too slow to upload on mobile data
+// and often too large for the server to accept. Resize + compress before sending.
 document.getElementById('photoInput').addEventListener('change', function (e) {
   const file = e.target.files[0];
   if (!file) return;
 
   const reader = new FileReader();
   reader.onload = function (evt) {
-    selectedPhotoBase64 = evt.target.result;
-    const preview = document.getElementById('photoPreview');
-    preview.src = selectedPhotoBase64;
-    preview.style.display = 'block';
+    const img = new Image();
+    img.onload = function () {
+      const MAX_DIMENSION = 800;
+      let { width, height } = img;
+
+      if (width > height && width > MAX_DIMENSION) {
+        height = Math.round((height * MAX_DIMENSION) / width);
+        width = MAX_DIMENSION;
+      } else if (height > MAX_DIMENSION) {
+        width = Math.round((width * MAX_DIMENSION) / height);
+        height = MAX_DIMENSION;
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+
+      // JPEG at 0.75 quality — small enough to upload quickly even on slow connections,
+      // still clear enough for door staff to visually verify identity.
+      selectedPhotoBase64 = canvas.toDataURL('image/jpeg', 0.75);
+
+      const preview = document.getElementById('photoPreview');
+      preview.src = selectedPhotoBase64;
+      preview.style.display = 'block';
+    };
+    img.src = evt.target.result;
   };
   reader.readAsDataURL(file);
 });
@@ -132,7 +157,8 @@ stepDetailsForm.addEventListener('submit', async function (e) {
     const result = await response.json();
 
     if (!response.ok) {
-      stepDetailsError.textContent = result.error || 'Something went wrong. Please try again.';
+      const detailText = Array.isArray(result.details) ? result.details.join(' ') : '';
+      stepDetailsError.textContent = detailText || result.error || 'Something went wrong. Please try again.';
       stepDetailsError.style.display = 'block';
       submitBtn.disabled = false;
       submitBtn.textContent = 'Complete Registration';
