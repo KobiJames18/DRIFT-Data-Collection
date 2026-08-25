@@ -2,7 +2,7 @@ const SUPABASE_URL = 'https://esuueahaoporkdyurwjr.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVzdXVlYWhhb3BvcmtkeXVyd2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4ODA1NDMsImV4cCI6MjEwMjQ1NjU0M30.kHYPaCCq8VkDeSAqqBDjguMtbKqTDgJWbtuQqbut_6c';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let currentTab = 'participants';
+let currentTab = 'dashboard';
 let participantsData = [];
 let volunteersData = [];
 let sponsorsData = [];
@@ -18,6 +18,8 @@ const volunteersPanel = document.getElementById('volunteers-panel');
 const sponsorsPanel = document.getElementById('sponsors-panel');
 const checkinPanel = document.getElementById('checkin-panel');
 const generatePanel = document.getElementById('generate-panel');
+const dashboardPanel = document.getElementById('dashboard-panel');
+const staffPanel = document.getElementById('staff-panel');
 const participantsTbody = document.getElementById('participants-tbody');
 const volunteersTbody = document.getElementById('volunteers-tbody');
 const sponsorsTbody = document.getElementById('sponsors-tbody');
@@ -76,9 +78,8 @@ async function loadAllData() {
   checkedInIds = new Set((checkInsRes.data || []).map((c) => c.participant_id));
   sponsorsData = sponsorsRes.data || [];
 
-  document.getElementById('stat-participants').textContent = participantsData.length;
-  document.getElementById('stat-volunteers').textContent = volunteersData.length;
-  document.getElementById('stat-checkins').textContent = checkedInIds.size;
+  // Old top-level stat-strip removed — the Dashboard tab now shows more detailed
+  // stats (Total Registered, Checked In, Not Checked In, Invalid Scans) instead.
 
   renderCurrentTab();
 }
@@ -111,8 +112,13 @@ document.querySelectorAll('.tab-btn').forEach((btn) => {
     searchBox.value = '';
     editingSponsorId = null;
     if (typeof stopQrScanner === 'function') stopQrScanner();
+    document.getElementById('sidebar').classList.remove('open'); // close mobile sidebar after picking a tab
     renderCurrentTab();
   });
+});
+
+document.getElementById('sidebar-toggle').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
 });
 
 function renderCurrentTab() {
@@ -121,16 +127,22 @@ function renderCurrentTab() {
 
   document.getElementById('add-ticket-btn').hidden = currentTab !== 'participants';
   document.getElementById('add-sponsor-btn').hidden = currentTab !== 'sponsors';
-  searchBox.hidden = (currentTab === 'sponsors' || currentTab === 'checkin' || currentTab === 'generate');
-  document.getElementById('refresh-btn').hidden = (currentTab === 'checkin' || currentTab === 'generate');
+  searchBox.hidden = (currentTab === 'sponsors' || currentTab === 'checkin' || currentTab === 'generate' || currentTab === 'dashboard' || currentTab === 'staff');
+  document.getElementById('refresh-btn').hidden = (currentTab === 'checkin' || currentTab === 'generate' || currentTab === 'staff');
 
   participantsPanel.hidden = true;
   volunteersPanel.hidden = true;
   sponsorsPanel.hidden = true;
   checkinPanel.hidden = true;
   generatePanel.hidden = true;
+  dashboardPanel.hidden = true;
+  staffPanel.hidden = true;
+  emptyState.hidden = true;
 
-  if (currentTab === 'participants') {
+  if (currentTab === 'dashboard') {
+    dashboardPanel.hidden = false;
+    renderDashboard();
+  } else if (currentTab === 'participants') {
     renderParticipants(participantsData);
   } else if (currentTab === 'volunteers') {
     renderVolunteers(volunteersData);
@@ -139,11 +151,12 @@ function renderCurrentTab() {
   } else if (currentTab === 'checkin') {
     checkinPanel.hidden = false;
     loadingState.hidden = true;
-    emptyState.hidden = true;
   } else if (currentTab === 'generate') {
     generatePanel.hidden = false;
     loadingState.hidden = true;
-    emptyState.hidden = true;
+  } else if (currentTab === 'staff') {
+    staffPanel.hidden = false;
+    loadingState.hidden = true;
   }
 }
 
@@ -746,6 +759,59 @@ async function stopQrScanner() {
   scanToggleBtn.textContent = '📷 Scan QR Code Instead';
 }
 
+// ---------- STAFF ACCOUNTS ----------
+document.getElementById('staff-create-btn').addEventListener('click', async () => {
+  const email = document.getElementById('staff-email-input').value.trim();
+  const password = document.getElementById('staff-password-input').value;
+  const role = document.getElementById('staff-role-select').value;
+  const errorBox = document.getElementById('staff-create-error');
+  const resultBox = document.getElementById('staff-create-result');
+  errorBox.style.display = 'none';
+  resultBox.innerHTML = '';
+
+  if (!email || !password) {
+    errorBox.textContent = 'Email and password are required.';
+    errorBox.style.display = 'block';
+    return;
+  }
+
+  const createBtn = document.getElementById('staff-create-btn');
+  createBtn.disabled = true;
+  createBtn.textContent = 'Creating...';
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+
+  try {
+    const response = await fetch('https://esuueahaoporkdyurwjr.supabase.co/functions/v1/create-staff-account', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({ email, password, role }),
+    });
+    const result = await response.json();
+
+    createBtn.disabled = false;
+    createBtn.textContent = 'Create Account';
+
+    if (!response.ok) {
+      errorBox.textContent = result.error || 'Could not create account.';
+      errorBox.style.display = 'block';
+      return;
+    }
+
+    resultBox.innerHTML = `<p style="color: #2fd15a; font-family: 'Space Mono', monospace; font-size: 13px; margin-top: 16px; text-align: center;">✓ ${escapeHtml(role)} account created for ${escapeHtml(email)}. Share the login and password with them directly — this won't be shown again.</p>`;
+    document.getElementById('staff-email-input').value = '';
+    document.getElementById('staff-password-input').value = '';
+  } catch (err) {
+    createBtn.disabled = false;
+    createBtn.textContent = 'Create Account';
+    errorBox.textContent = 'Could not connect. Please try again.';
+    errorBox.style.display = 'block';
+  }
+});
+
 // ---------- GENERATE TICKETS ----------
 document.getElementById('generate-tickets-btn').addEventListener('click', async () => {
   const countInput = document.getElementById('generate-count-input');
@@ -777,7 +843,7 @@ document.getElementById('generate-tickets-btn').addEventListener('click', async 
 
   resultDiv.innerHTML = `
     <p style="color: var(--red); font-family: 'Space Mono', monospace; font-size: 12px; text-align: center; margin-bottom: 20px;">
-      ⚠ These PINs are shown ONCE. Print or record them now they cannot be retrieved again after you leave this page.
+      ⚠ These PINs are shown ONCE. Print or record them now — they cannot be retrieved again after you leave this page.
     </p>
     <div id="ticket-print-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
       ${data.map((t) => `
@@ -793,6 +859,134 @@ document.getElementById('generate-tickets-btn').addEventListener('click', async 
 
   document.getElementById('print-tickets-btn').addEventListener('click', () => window.print());
 });
+
+// ---------- DASHBOARD OVERVIEW ----------
+let dashLineChartInstance = null;
+let dashBarChartInstance = null;
+
+async function renderDashboard() {
+  const totalRegistered = participantsData.filter((p) => p.status === 'Registered').length;
+  const checkedInCount = checkedInIds.size;
+  const notCheckedIn = Math.max(totalRegistered - checkedInCount, 0);
+
+  const { count: invalidScanCount } = await supabaseClient
+    .from('scan_logs')
+    .select('id', { count: 'exact', head: true })
+    .eq('scan_result', 'invalid');
+
+  document.getElementById('dash-total-registered').textContent = totalRegistered;
+  document.getElementById('dash-checked-in').textContent = checkedInCount;
+  document.getElementById('dash-not-checked-in').textContent = notCheckedIn;
+  document.getElementById('dash-invalid-scans').textContent = invalidScanCount ?? 0;
+
+  const checkedInPct = totalRegistered > 0 ? ((checkedInCount / totalRegistered) * 100).toFixed(1) : '0.0';
+  const notCheckedInPct = totalRegistered > 0 ? ((notCheckedIn / totalRegistered) * 100).toFixed(1) : '0.0';
+  document.getElementById('dash-checked-in-pct').textContent = `${checkedInPct}% of total`;
+  document.getElementById('dash-not-checked-in-pct').textContent = `${notCheckedInPct}% of total`;
+
+  // Fetch check-in data with participant + admin info joined, for both the table and charts
+  const { data: recentCheckins } = await supabaseClient
+    .from('check_ins')
+    .select('checked_in_at, participants(full_name, registration_id), admins(email)')
+    .order('checked_in_at', { ascending: false })
+    .limit(200); // enough history for the charts, table only shows the top 10
+
+  renderRecentCheckinsTable((recentCheckins || []).slice(0, 10));
+  renderLineChart(recentCheckins || []);
+  renderBarChart(recentCheckins || []);
+}
+
+function renderRecentCheckinsTable(rows) {
+  const tbody = document.getElementById('recent-checkins-tbody');
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--gray);">No check-ins yet.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = rows.map((c) => `
+    <tr>
+      <td>${escapeHtml(c.participants?.full_name || '—')}</td>
+      <td class="mono">${escapeHtml(c.participants?.registration_id || '—')}</td>
+      <td>${new Date(c.checked_in_at).toLocaleString()}</td>
+      <td>${escapeHtml(c.admins?.email || '—')}</td>
+      <td><span class="status-pill status-registered">✓ Checked In</span></td>
+    </tr>
+  `).join('');
+}
+
+function renderLineChart(checkins) {
+  // Build a day-by-day count for the last 7 days, for both registrations and check-ins
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    days.push(d.toISOString().slice(0, 10));
+  }
+
+  const registeredByDay = days.map((day) =>
+    participantsData.filter((p) => p.registered_at && p.registered_at.slice(0, 10) === day).length
+  );
+  const checkedInByDay = days.map((day) =>
+    checkins.filter((c) => c.checked_in_at && c.checked_in_at.slice(0, 10) === day).length
+  );
+
+  const ctx = document.getElementById('dashLineChart');
+  if (dashLineChartInstance) dashLineChartInstance.destroy();
+
+  dashLineChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: days.map((d) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+      datasets: [
+        { label: 'Registered', data: registeredByDay, borderColor: '#29abe2', backgroundColor: 'transparent', tension: 0.3, pointRadius: 2 },
+        { label: 'Checked In', data: checkedInByDay, borderColor: '#2fd15a', backgroundColor: 'transparent', tension: 0.3, pointRadius: 2 },
+      ],
+    },
+    options: {
+      plugins: { legend: { position: 'top', labels: { color: '#8c8c8c', boxWidth: 8, boxHeight: 8 } } },
+      scales: {
+        x: { grid: { color: 'rgba(244,244,242,0.08)' }, ticks: { color: '#8c8c8c' } },
+        y: { grid: { color: 'rgba(244,244,242,0.08)' }, ticks: { color: '#8c8c8c' }, beginAtZero: true },
+      },
+    },
+  });
+}
+
+function renderBarChart(checkins) {
+  const today = new Date().toISOString().slice(0, 10);
+  const hours = Array.from({ length: 24 }, (_, h) => h);
+  const countsByHour = hours.map((h) =>
+    checkins.filter((c) => {
+      if (!c.checked_in_at || c.checked_in_at.slice(0, 10) !== today) return false;
+      return new Date(c.checked_in_at).getHours() === h;
+    }).length
+  );
+
+  // Only show hours that have any activity across the whole day, plus a little padding,
+  // so the chart isn't 24 mostly-empty bars before the event has really started.
+  const firstActive = countsByHour.findIndex((c) => c > 0);
+  const startHour = firstActive === -1 ? 17 : Math.max(firstActive - 1, 0);
+  const visibleHours = hours.slice(startHour, startHour + 8);
+  const visibleCounts = countsByHour.slice(startHour, startHour + 8);
+
+  const ctx = document.getElementById('dashBarChart');
+  if (dashBarChartInstance) dashBarChartInstance.destroy();
+
+  dashBarChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: visibleHours.map((h) => `${h % 12 === 0 ? 12 : h % 12}${h < 12 ? 'AM' : 'PM'}`),
+      datasets: [{ label: 'Check-ins', data: visibleCounts, backgroundColor: '#e8342c', borderRadius: 4 }],
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#8c8c8c' } },
+        y: { grid: { color: 'rgba(244,244,242,0.08)' }, ticks: { color: '#8c8c8c' }, beginAtZero: true },
+      },
+    },
+  });
+}
 
 // ---------- UTIL ----------
 function escapeHtml(str) {
