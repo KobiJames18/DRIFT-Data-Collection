@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard DRIFT</title>
+<title>Admin Dashboard DRI-FT</title>
 <meta name="robots" content="noindex, nofollow">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,48 +13,36 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
 </head>
 <body>
 
-<nav>
-  <a href="admin.dashboard.html" class="nav-mark">
-    <img src="../images/drift header logo.jpg" alt="DRIFT" class="nav-logo">
-  </a>
-  <div class="nav-links">
-    <span id="admin-email" class="mono admin-email-tag"></span>
-    <a href="#" id="logout-link">Log Out</a>
-  </div>
-</nav>
+<button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle menu">
+  <span></span><span></span><span></span>
+</button>
 
-<main class="dash-wrap" id="dash-main" hidden>
-
-  <section class="dash-header">
-    <div class="eyebrow">Admin</div>
-    <h1 class="dash-title">DRIFT Dashboard</h1>
-  </section>
-
-  <section class="stat-strip" id="stat-strip">
-    <div class="stat-card">
-      <div class="stat-k">Registrants</div>
-      <div class="stat-v" id="stat-participants">—</div>
+<div class="admin-layout">
+  <aside class="sidebar" id="sidebar">
+    <a href="admin.dashboard.html" class="sidebar-logo">
+      <img src="../images/drift header logo.jpg" alt="DRIFT" class="sidebar-logo-img">
+      <span class="sidebar-logo-tag">ADMIN</span>
+    </a>
+    <nav class="sidebar-nav">
+      <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+      <button class="tab-btn" data-tab="participants">Registrants</button>
+      <button class="tab-btn" data-tab="volunteers">Volunteers</button>
+      <button class="tab-btn" data-tab="sponsors">Sponsors</button>
+      <button class="tab-btn" data-tab="checkin">Door Check-In</button>
+      <button class="tab-btn" data-tab="generate">Generate Tickets</button>
+      <button class="tab-btn" data-tab="staff">Staff Accounts</button>
+    </nav>
+    <div class="sidebar-footer">
+      <span id="admin-email" class="mono admin-email-tag"></span>
+      <a href="#" id="logout-link">Log Out</a>
     </div>
-    <div class="stat-card">
-      <div class="stat-k">Volunteers</div>
-      <div class="stat-v" id="stat-volunteers">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-k">Checked In</div>
-      <div class="stat-v" id="stat-checkins">—</div>
-    </div>
-  </section>
+  </aside>
 
-  <section class="tab-bar">
-    <button class="tab-btn active" data-tab="participants">Registrants</button>
-    <button class="tab-btn" data-tab="volunteers">Volunteers</button>
-    <button class="tab-btn" data-tab="sponsors">Sponsors</button>
-    <button class="tab-btn" data-tab="checkin">Door Check-In</button>
-    <button class="tab-btn" data-tab="generate">Generate Tickets</button>
-  </section>
+  <main class="dash-wrap" id="dash-main" hidden>
 
   <div class="table-toolbar">
     <input type="text" id="search-box" class="search-box" placeholder="Search by name, email, or phone...">
@@ -66,6 +54,57 @@
   <section id="loading-state" class="state-msg">Loading data...</section>
   <section id="error-state" class="state-msg error-state" hidden></section>
   <section id="empty-state" class="state-msg" hidden>No records found.</section>
+
+  <section id="dashboard-panel" class="dashboard-panel">
+    <div class="dash-stat-row">
+      <div class="dash-stat-card">
+        <div class="dash-stat-label">Total Registered</div>
+        <div class="dash-stat-num" id="dash-total-registered">—</div>
+        <div class="dash-stat-foot">Confirmed tickets</div>
+      </div>
+      <div class="dash-stat-card">
+        <div class="dash-stat-label">Checked In</div>
+        <div class="dash-stat-num dash-green" id="dash-checked-in">—</div>
+        <div class="dash-stat-foot" id="dash-checked-in-pct">—</div>
+      </div>
+      <div class="dash-stat-card">
+        <div class="dash-stat-label">Not Checked In</div>
+        <div class="dash-stat-num dash-amber" id="dash-not-checked-in">—</div>
+        <div class="dash-stat-foot" id="dash-not-checked-in-pct">—</div>
+      </div>
+      <div class="dash-stat-card">
+        <div class="dash-stat-label">Invalid Scans</div>
+        <div class="dash-stat-num dash-red" id="dash-invalid-scans">—</div>
+        <div class="dash-stat-foot">Denied at the door</div>
+      </div>
+    </div>
+
+    <div class="dash-chart-row">
+      <div class="dash-chart-card">
+        <div class="dash-chart-title">Registrations vs Check-Ins (last 7 days)</div>
+        <canvas id="dashLineChart" height="140"></canvas>
+      </div>
+      <div class="dash-chart-card">
+        <div class="dash-chart-title">Check-Ins by Hour (today)</div>
+        <canvas id="dashBarChart" height="140"></canvas>
+      </div>
+    </div>
+
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Ticket ID</th>
+            <th>Checked In At</th>
+            <th>By</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="recent-checkins-tbody"></tbody>
+      </table>
+    </div>
+  </section>
 
   <section class="table-scroll" id="participants-panel">
     <table class="data-table" id="participants-table">
@@ -141,7 +180,32 @@
     <div id="generate-result"></div>
   </section>
 
+  <section id="staff-panel" hidden class="checkin-panel">
+    <p style="color: var(--gray); font-size: 13px; margin-bottom: 20px; text-align: center;">
+      Create a login for door staff. Scanner accounts can ONLY check people in they cannot view registrant lists, edit anything, or access anything else in this dashboard.
+    </p>
+    <div class="modal-field">
+      <label for="staff-email-input">Email</label>
+      <input type="text" id="staff-email-input" placeholder="staffmember@email.com">
+    </div>
+    <div class="modal-field">
+      <label for="staff-password-input">Temporary Password</label>
+      <input type="text" id="staff-password-input" placeholder="At least 8 characters">
+    </div>
+    <div class="modal-field">
+      <label for="staff-role-select">Role</label>
+      <select id="staff-role-select">
+        <option value="scanner">Scanner (check-in only)</option>
+        <option value="admin">Full Admin</option>
+      </select>
+    </div>
+    <p class="form-note" id="staff-create-error" style="color: var(--red); display: none;"></p>
+    <button class="btn" id="staff-create-btn" style="width: 100%;">Create Account</button>
+    <div id="staff-create-result"></div>
+  </section>
+
 </main>
+</div>
 
 <!-- Edit modal, shared between both tables -->
 <div class="modal-backdrop" id="edit-modal-backdrop" hidden>
