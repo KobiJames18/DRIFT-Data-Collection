@@ -1,109 +1,148 @@
-.admin-email-tag {
-  font-size: 12px;
-  color: var(--gray);
-  margin-right: 24px;
+/* ---------- SIDEBAR LAYOUT ---------- */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
 }
 
-/* The main site's mobile nav hides nav-links off-screen behind a hamburger button
-   that this admin page doesn't have. Since this nav only holds the email + logout
-   link, just keep it visible inline instead of building a whole toggle for it. */
-@media (max-width: 720px) {
-  .nav-links {
-    position: static;
-    height: auto;
-    width: auto;
-    background: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 12px;
-    padding: 0;
-    border-left: none;
-    transform: none;
-    font-size: 12px;
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--black-deep);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sidebar-logo-img {
+  height: 32px;
+  width: auto;
+  border-radius: 3px;
+}
+
+.sidebar-logo-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--gray);
+}
+
+.sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-email-tag {
+  font-size: 11px;
+  color: var(--gray);
+  word-break: break-all;
+}
+
+.sidebar-footer #logout-link {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 200;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: var(--black-deep);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.sidebar-toggle span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--white);
+  border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .sidebar-toggle { display: flex; }
+
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    width: 240px;
   }
 
-  .admin-email-tag {
-    margin-right: 8px;
-    display: none;
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .dash-wrap {
+    margin-left: 0 !important;
+    padding-top: 80px !important;
   }
 }
 
 .dash-wrap {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 120px 24px 100px;
+  flex: 1;
+  margin-left: 220px;
+  max-width: 1100px;
+  padding: 40px 32px 100px;
 }
 
-.dash-header { margin-bottom: 36px; }
-
-.dash-title {
-  font-size: clamp(30px, 5vw, 48px);
-  margin-top: 8px;
-}
-
-/* ---------- STATS ---------- */
-.stat-strip {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-  margin-bottom: 40px;
-}
-
-.stat-card {
-  background: var(--black-deep);
-  padding: 28px 24px;
-}
-
-.stat-k {
-  font-family: 'Space Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--gray);
-  margin-bottom: 10px;
-}
-
-.stat-v {
-  font-family: 'Anton', sans-serif;
-  font-size: 36px;
-  color: var(--blue);
-}
-
-@media (max-width: 640px) {
-  .stat-strip { grid-template-columns: 1fr; }
-}
-
-/* ---------- TABS ---------- */
-.tab-bar {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--line);
-}
-
+/* ---------- SIDEBAR NAV ITEMS (replaces old horizontal tab bar) ---------- */
 .tab-btn {
   background: none;
   border: none;
+  border-left: 3px solid transparent;
   color: var(--gray);
   font-family: 'Space Mono', monospace;
   font-size: 13px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 12px 18px;
+  letter-spacing: 0.04em;
+  text-align: left;
+  padding: 12px 16px;
   cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
 }
 
 .tab-btn.active,
 .tab-btn:hover {
   color: var(--white);
-  border-bottom-color: var(--red);
+  background: rgba(244,244,242,0.05);
+  border-left-color: var(--red);
 }
 
 /* ---------- TOOLBAR ---------- */
@@ -431,4 +470,76 @@
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid var(--line);
+}
+
+/* ---------- DASHBOARD OVERVIEW ---------- */
+.dash-stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 900px) {
+  .dash-stat-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+.dash-stat-card {
+  background: rgba(244,244,242,0.03);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.dash-stat-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 8px;
+}
+
+.dash-stat-num {
+  font-family: 'Anton', sans-serif;
+  font-size: 32px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.dash-stat-num.dash-green { color: #2fd15a; }
+.dash-stat-num.dash-amber { color: #f5a623; }
+.dash-stat-num.dash-red { color: var(--red); }
+
+.dash-stat-foot {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--gray);
+}
+
+.dash-chart-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 900px) {
+  .dash-chart-row { grid-template-columns: 1fr; }
+}
+
+.dash-chart-card {
+  background: rgba(244,244,242,0.03);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.dash-chart-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 14px;
 }
