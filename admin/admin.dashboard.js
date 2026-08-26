@@ -602,8 +602,18 @@ function openEditSponsorModal(id) {
 const checkinInput = document.getElementById('checkin-search-input');
 const checkinResult = document.getElementById('checkin-result');
 
+// People often type ticket codes without hyphens. Normalize so punctuation/case
+// never causes a false "not found" for what is actually a valid ticket.
+function normalizeTicketCode(raw) {
+  const cleaned = raw.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+  if (/^DR[0-9A-F]{8}$/.test(cleaned)) {
+    return `DR-${cleaned.slice(2, 6)}-${cleaned.slice(6, 10)}`;
+  }
+  return cleaned;
+}
+
 async function performCheckinSearch() {
-  const regId = checkinInput.value.trim().toUpperCase();
+  const regId = normalizeTicketCode(checkinInput.value.trim());
   if (!regId) return;
 
   checkinResult.innerHTML = '<p class="state-msg">Searching...</p>';
