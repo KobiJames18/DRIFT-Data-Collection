@@ -645,7 +645,7 @@ async function performCheckinSearch() {
 
   let statusWarning = '';
   if (participant.status !== 'Registered') {
-    statusWarning = `<p class="checkin-warn">Status is "${escapeHtml(participant.status)}" — not an approved, confirmed ticket. Verify before allowing entry.</p>`;
+    statusWarning = `<p class="checkin-warn">Status is "${escapeHtml(participant.status)}" not an approved, confirmed ticket. Verify before allowing entry.</p>`;
   }
 
   let photoHtml = '';
@@ -853,7 +853,7 @@ document.getElementById('generate-tickets-btn').addEventListener('click', async 
 
   resultDiv.innerHTML = `
     <p style="color: var(--red); font-family: 'Space Mono', monospace; font-size: 12px; text-align: center; margin-bottom: 20px;">
-      ⚠ These PINs are shown ONCE. Print or record them now — they cannot be retrieved again after you leave this page.
+      ⚠ These PINs are shown ONCE. Print or record them now they cannot be retrieved again after you leave this page.
     </p>
     <div id="ticket-print-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
       ${data.map((t) => `
