@@ -11,6 +11,16 @@ const stepDetailsError = document.getElementById('step-details-error');
 let verifiedTicketCode = '';
 let selectedPhotoBase64 = '';
 
+// People often type ticket codes without the hyphens (e.g. "DRD75ECE7E" instead of
+// "DR-D75E-CE7E"). Normalize so punctuation/spacing/case never causes a false "invalid".
+function normalizeTicketCode(raw) {
+  const cleaned = raw.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+  if (/^DR[0-9A-F]{8}$/.test(cleaned)) {
+    return `DR-${cleaned.slice(2, 6)}-${cleaned.slice(6, 10)}`;
+  }
+  return cleaned;
+}
+
 function setError(fieldEl, hasError) {
   fieldEl.classList.toggle('has-error', hasError);
 }
@@ -20,7 +30,7 @@ stepCodeForm.addEventListener('submit', async function (e) {
   e.preventDefault();
   stepCodeError.style.display = 'none';
 
-  const ticketCode = document.getElementById('ticketCode').value.trim().toUpperCase();
+  const ticketCode = normalizeTicketCode(document.getElementById('ticketCode').value.trim());
   if (!ticketCode) return;
 
   const submitBtn = stepCodeForm.querySelector('.submit-btn');
