@@ -97,7 +97,7 @@ async function performCheckinSearch() {
 
   let statusWarning = '';
   if (data.status !== 'Registered') {
-    statusWarning = `<p class="checkin-warn">Status is "${escapeHtml(data.status)}" — not an approved, confirmed ticket. Verify before allowing entry.</p>`;
+    statusWarning = `<p class="checkin-warn">Status is "${escapeHtml(data.status)}" not an approved, confirmed ticket. Verify before allowing entry.</p>`;
   }
 
   const photoHtml = data.photoUrl
