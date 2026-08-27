@@ -78,7 +78,7 @@ async function loadAllData() {
   checkedInIds = new Set((checkInsRes.data || []).map((c) => c.participant_id));
   sponsorsData = sponsorsRes.data || [];
 
-  // Old top-level stat-strip removed — the Dashboard tab now shows more detailed
+  // Old top level stat strip removed the Dashboard tab now shows more detailed
   // stats (Total Registered, Checked In, Not Checked In, Invalid Scans) instead.
 
   renderCurrentTab();
@@ -828,8 +828,8 @@ document.getElementById('generate-tickets-btn').addEventListener('click', async 
   const count = parseInt(countInput.value, 10);
   const resultDiv = document.getElementById('generate-result');
 
-  if (!count || count < 1 || count > 200) {
-    resultDiv.innerHTML = '<p class="state-msg error-state">Enter a number between 1 and 200.</p>';
+  if (!count || count < 1 || count > 400) {
+    resultDiv.innerHTML = '<p class="state-msg error-state">Enter a number between 1 and 400.</p>';
     return;
   }
 
@@ -899,7 +899,7 @@ async function renderDashboard() {
     .from('check_ins')
     .select('checked_in_at, participants(full_name, registration_id), admins(email)')
     .order('checked_in_at', { ascending: false })
-    .limit(200); // enough history for the charts, table only shows the top 10
+    .limit(400); // enough history for the charts, table only shows the top 10
 
   renderRecentCheckinsTable((recentCheckins || []).slice(0, 10));
   renderLineChart(recentCheckins || []);
@@ -925,7 +925,7 @@ function renderRecentCheckinsTable(rows) {
 }
 
 function renderLineChart(checkins) {
-  // Build a day-by-day count for the last 7 days, for both registrations and check-ins
+  // Build a day by day count for the last 7 days, for both registrations and check-ins
   const days = [];
   for (let i = 6; i >= 0; i--) {
     const d = new Date();
@@ -973,7 +973,7 @@ function renderBarChart(checkins) {
   );
 
   // Only show hours that have any activity across the whole day, plus a little padding,
-  // so the chart isn't 24 mostly-empty bars before the event has really started.
+  // so the chart isn't 24 mostly empty bars before the event has really started.
   const firstActive = countsByHour.findIndex((c) => c > 0);
   const startHour = firstActive === -1 ? 17 : Math.max(firstActive - 1, 0);
   const visibleHours = hours.slice(startHour, startHour + 8);
