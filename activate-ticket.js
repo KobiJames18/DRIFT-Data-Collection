@@ -64,8 +64,9 @@ stepCodeForm.addEventListener('submit', async function (e) {
       return;
     }
 
-    // Valid and unused — move to step 2
+    // Valid and unused, move to step 2
     verifiedTicketCode = ticketCode;
+    document.getElementById('verifiedTicketCodeInput').value = ticketCode;
     document.getElementById('confirmedCode').textContent = ticketCode;
     stepCodeForm.hidden = true;
     stepDetailsForm.hidden = false;
@@ -106,7 +107,7 @@ document.getElementById('photoInput').addEventListener('change', function (e) {
       canvas.height = height;
       canvas.getContext('2d').drawImage(img, 0, 0, width, height);
 
-      // JPEG at 0.75 quality — small enough to upload quickly even on slow connections,
+      // JPEG at 0.75 quality, small enough to upload quickly even on slow connections,
       // still clear enough for door staff to visually verify identity.
       selectedPhotoBase64 = canvas.toDataURL('image/jpeg', 0.75);
 
@@ -123,6 +124,18 @@ document.getElementById('photoInput').addEventListener('change', function (e) {
 stepDetailsForm.addEventListener('submit', async function (e) {
   e.preventDefault();
   stepDetailsError.style.display = 'none';
+
+  // Fall back to the hidden form field if the JS variable got reset (e.g. page refresh)
+  const activeTicketCode = verifiedTicketCode || document.getElementById('verifiedTicketCodeInput').value;
+
+  if (!activeTicketCode) {
+    stepDetailsError.textContent = 'Your session was reset (maybe the page refreshed). Please start over from your ticket code.';
+    stepDetailsError.style.display = 'block';
+    stepDetailsForm.hidden = true;
+    stepCodeForm.hidden = false;
+    stepCodeForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
 
   let isValid = true;
   const requiredFields = ['pin', 'fullName', 'phone', 'email'];
@@ -150,7 +163,7 @@ stepDetailsForm.addEventListener('submit', async function (e) {
   submitBtn.textContent = 'Submitting...';
 
   const payload = {
-    ticketCode: verifiedTicketCode,
+    ticketCode: activeTicketCode,
     pin: document.getElementById('pin').value.trim(),
     fullName: document.getElementById('fullName').value.trim(),
     phone: document.getElementById('phone').value.trim(),
