@@ -47,6 +47,7 @@
 
   <!-- STEP 2: PIN + registration details -->
   <form id="step-details-form" class="reg-form" novalidate hidden>
+    <input type="hidden" id="verifiedTicketCodeInput">
     <div class="field">
       <label>Ticket Code</label>
       <div class="ticket-badge"><span class="ticket-dot"></span> <span id="confirmedCode"></span></div>
@@ -54,7 +55,7 @@
 
     <div class="field">
       <label for="pin">Security PIN</label>
-      <input type="text" id="pin" name="pin" placeholder="6-digit PIN from your ticket" inputmode="numeric" maxlength="6" required>
+      <input type="text" id="pin" name="pin" placeholder="6 digit PIN from your ticket" inputmode="numeric" maxlength="6" required>
       <span class="error-msg" data-for="pin">Scratch off and enter the 6 digit PIN on your ticket.</span>
     </div>
 
