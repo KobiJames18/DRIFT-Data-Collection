@@ -94,7 +94,7 @@ form.addEventListener('submit', async function (e) {
       return;
     }
 
-    // Success — but this is now a PENDING submission, not an instantly confirmed ticket.
+    // Success but this is now a PENDING submission, not an instantly confirmed ticket.
     // Show the reference ID and set expectations that review/confirmation follows.
     successName.textContent = payload.fullName.split(' ')[0];
     const regIdEl = document.getElementById('registrationId');
