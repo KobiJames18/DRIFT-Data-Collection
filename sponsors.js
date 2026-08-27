@@ -20,7 +20,7 @@ async function loadSponsors() {
     renderHomepageSponsors(sponsors);
     renderFooterSponsors(sponsors);
   } catch (err) {
-    // Fail silently — sponsors are a nice-to-have, never block the page
+    // Fail silently sponsors are a nice to have, never block the page
     console.error('Could not load sponsors:', err);
   }
 }
