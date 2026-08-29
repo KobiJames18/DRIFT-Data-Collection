@@ -610,3 +610,9 @@
     max-width: 100%;
     overflow-x: hidden;
   }
+
+  /* Stops the pull-to-refresh gesture on mobile, which was likely wiping the
+     in-progress ticket activation form when someone scrolled past the top. */
+  body {
+    overscroll-behavior-y: contain;
+  }

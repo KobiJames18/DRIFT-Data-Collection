@@ -11,6 +11,19 @@ const stepDetailsError = document.getElementById('step-details-error');
 let verifiedTicketCode = '';
 let selectedPhotoBase64 = '';
 
+// If they refreshed mid-activation, resume right where they left off instead of
+// making them re-enter and re-verify the ticket code from scratch.
+(function resumeIfPossible() {
+  const saved = sessionStorage.getItem('driftTicketCode');
+  if (saved) {
+    verifiedTicketCode = saved;
+    document.getElementById('verifiedTicketCodeInput').value = saved;
+    document.getElementById('confirmedCode').textContent = saved;
+    stepCodeForm.hidden = true;
+    stepDetailsForm.hidden = false;
+  }
+})();
+
 // People often type ticket codes without the hyphens (e.g. "DRD75ECE7E" instead of
 // "DR-D75E-CE7E"). Normalize so punctuation/spacing/case never causes a false "invalid".
 function normalizeTicketCode(raw) {
@@ -64,8 +77,10 @@ stepCodeForm.addEventListener('submit', async function (e) {
       return;
     }
 
-    // Valid and unused, move to step 2
+    // Valid and unused, move to step 2. sessionStorage survives an accidental
+    // refresh (e.g. pull-to-refresh on mobile), unlike a plain JS variable.
     verifiedTicketCode = ticketCode;
+    sessionStorage.setItem('driftTicketCode', ticketCode);
     document.getElementById('verifiedTicketCodeInput').value = ticketCode;
     document.getElementById('confirmedCode').textContent = ticketCode;
     stepCodeForm.hidden = true;
@@ -125,8 +140,8 @@ stepDetailsForm.addEventListener('submit', async function (e) {
   e.preventDefault();
   stepDetailsError.style.display = 'none';
 
-  // Fall back to the hidden form field if the JS variable got reset (e.g. page refresh)
-  const activeTicketCode = verifiedTicketCode || document.getElementById('verifiedTicketCodeInput').value;
+  // Fall back through sessionStorage (survives refresh), then the hidden field
+  const activeTicketCode = verifiedTicketCode || sessionStorage.getItem('driftTicketCode') || document.getElementById('verifiedTicketCodeInput').value;
 
   if (!activeTicketCode) {
     stepDetailsError.textContent = 'Your session was reset (maybe the page refreshed). Please start over from your ticket code.';
@@ -190,6 +205,7 @@ stepDetailsForm.addEventListener('submit', async function (e) {
 
     stepDetailsForm.hidden = true;
     successPanel.hidden = false;
+    sessionStorage.removeItem('driftTicketCode');
     successPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (err) {
     console.error('Activation failed:', err);
