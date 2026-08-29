@@ -78,7 +78,7 @@ async function loadAllData() {
   checkedInIds = new Set((checkInsRes.data || []).map((c) => c.participant_id));
   sponsorsData = sponsorsRes.data || [];
 
-  // Old top level stat strip removed the Dashboard tab now shows more detailed
+  // Old top-level stat-strip removed, the Dashboard tab now shows more detailed
   // stats (Total Registered, Checked In, Not Checked In, Invalid Scans) instead.
 
   renderCurrentTab();
@@ -622,7 +622,7 @@ async function performCheckinSearch() {
 
   const { data: participant, error } = await supabaseClient
     .from('participants')
-    .select('id, full_name, registration_id, status, photo_url')
+    .select('id, full_name, registration_id, status, photo_url, ticket_id')
     .eq('registration_id', regId)
     .maybeSingle();
 
@@ -645,7 +645,7 @@ async function performCheckinSearch() {
 
   let statusWarning = '';
   if (participant.status !== 'Registered') {
-    statusWarning = `<p class="checkin-warn">Status is "${escapeHtml(participant.status)}" not an approved, confirmed ticket. Verify before allowing entry.</p>`;
+    statusWarning = `<p class="checkin-warn">Status is "${escapeHtml(participant.status)}" — not an approved, confirmed ticket. Verify before allowing entry.</p>`;
   }
 
   let photoHtml = '';
@@ -697,6 +697,14 @@ async function performCheckinSearch() {
         confirmBtn.disabled = false;
         confirmBtn.textContent = 'Check In Now';
         return;
+      }
+
+      // Also flip the linked physical ticket itself to CHECKED_IN, if there is one
+      if (participant.ticket_id) {
+        await supabaseClient
+          .from('tickets')
+          .update({ status: 'CHECKED_IN', checked_in_at: new Date().toISOString() })
+          .eq('id', participant.ticket_id);
       }
 
       await supabaseClient.from('scan_logs').insert({
@@ -828,8 +836,8 @@ document.getElementById('generate-tickets-btn').addEventListener('click', async 
   const count = parseInt(countInput.value, 10);
   const resultDiv = document.getElementById('generate-result');
 
-  if (!count || count < 1 || count > 400) {
-    resultDiv.innerHTML = '<p class="state-msg error-state">Enter a number between 1 and 400.</p>';
+  if (!count || count < 1 || count > 200) {
+    resultDiv.innerHTML = '<p class="state-msg error-state">Enter a number between 1 and 200.</p>';
     return;
   }
 
@@ -853,7 +861,7 @@ document.getElementById('generate-tickets-btn').addEventListener('click', async 
 
   resultDiv.innerHTML = `
     <p style="color: var(--red); font-family: 'Space Mono', monospace; font-size: 12px; text-align: center; margin-bottom: 20px;">
-      ⚠ These PINs are shown ONCE. Print or record them now they cannot be retrieved again after you leave this page.
+      ⚠ These PINs are shown ONCE. Print or record them now — they cannot be retrieved again after you leave this page.
     </p>
     <div id="ticket-print-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
       ${data.map((t) => `
@@ -899,7 +907,7 @@ async function renderDashboard() {
     .from('check_ins')
     .select('checked_in_at, participants(full_name, registration_id), admins(email)')
     .order('checked_in_at', { ascending: false })
-    .limit(400); // enough history for the charts, table only shows the top 10
+    .limit(200); // enough history for the charts, table only shows the top 10
 
   renderRecentCheckinsTable((recentCheckins || []).slice(0, 10));
   renderLineChart(recentCheckins || []);
@@ -925,7 +933,7 @@ function renderRecentCheckinsTable(rows) {
 }
 
 function renderLineChart(checkins) {
-  // Build a day by day count for the last 7 days, for both registrations and check-ins
+  // Build a day-by-day count for the last 7 days, for both registrations and check-ins
   const days = [];
   for (let i = 6; i >= 0; i--) {
     const d = new Date();
@@ -973,7 +981,7 @@ function renderBarChart(checkins) {
   );
 
   // Only show hours that have any activity across the whole day, plus a little padding,
-  // so the chart isn't 24 mostly empty bars before the event has really started.
+  // so the chart isn't 24 mostly-empty bars before the event has really started.
   const firstActive = countsByHour.findIndex((c) => c > 0);
   const startHour = firstActive === -1 ? 17 : Math.max(firstActive - 1, 0);
   const visibleHours = hours.slice(startHour, startHour + 8);
