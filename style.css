@@ -606,7 +606,9 @@
   }
 
   /* Safety net: no element should be able to force horizontal scroll on mobile */
-  html, body {
+  /* Only body, not html, to avoid a known iOS Safari bug where overflow-x:hidden
+     on the html element itself can freeze scrolling entirely. */
+  body {
     max-width: 100%;
     overflow-x: hidden;
   }
