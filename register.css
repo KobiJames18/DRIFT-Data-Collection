@@ -37,6 +37,12 @@
   gap: 22px;
 }
 
+/* The hidden attribute must always win over display:flex above, otherwise
+   two-step forms (like ticket activation) show both steps stacked at once. */
+.reg-form[hidden] {
+  display: none;
+}
+
 .field {
   display: flex;
   flex-direction: column;
