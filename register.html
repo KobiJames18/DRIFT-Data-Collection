@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register for DRI-FT Festival</title>
+<title>Register for DRI-FT New Year's Day Festival</title>
 <meta name="description" content="Register for DRI-FT, Sierra Leone's biggest New Year's Day music party festival. Get your unique registration ID. 18+ only.">
 <link rel="canonical" href="https://kobijames18.github.io/DRIFT-Data-Collection/register.html">
 
@@ -43,10 +43,20 @@
 <section class="reg-hero">
   <div class="eyebrow">Registration</div>
   <h1 class="reg-title">Register for DRI-FT</h1>
-  <p class="reg-sub">Fill in your details below. Submissions are reviewed before your ticket is confirmed you'll get a reference ID now, and we'll follow up once it's approved.</p>
+  <p class="reg-sub">Fill in your details below. Submissions are reviewed before your ticket is confirmed — you'll get a reference ID now, and we'll follow up once it's approved.</p>
 </section>
 
 <section class="reg-form-section">
+  <div id="closed-panel" class="success-panel" hidden>
+    <div class="success-icon">!</div>
+    <h2>Registration is closed for now.</h2>
+    <p>We're not accepting new online registrations at the moment. If you have a physical ticket, activate it below. Want to help out instead? Sign up to volunteer.</p>
+    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 10px;">
+      <a href="activate-ticket.html" class="btn">Activate a Ticket</a>
+      <a href="volunteer.html" class="btn" style="background: var(--blue);">Volunteer Instead</a>
+    </div>
+  </div>
+
   <form id="drift-form" class="reg-form" novalidate>
 
     <div class="field">
@@ -124,7 +134,7 @@
     <p>Your reference ID is:</p>
     <p class="reg-id-display" id="registrationId" style="font-family:'Space Mono',monospace; font-size:20px; color:var(--blue); margin-bottom:20px;"></p>
     <img id="ticketQr" src="" alt="Your ticket QR code" style="width: 160px; height: 160px; margin: 0 auto 20px; display: block; background: white; padding: 8px; border-radius: 6px;">
-    <p>Your registration is pending review. We'll reach out by phone or email once it's approved save this reference ID and QR code until then.</p>
+    <p>Your registration is pending review. We'll reach out by phone or email once it's approved — save this reference ID and QR code until then.</p>
     <a href="index.html" class="btn">Back to Home</a>
   </div>
 </section>
