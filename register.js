@@ -1,9 +1,34 @@
 const form = document.getElementById('drift-form');
 const successPanel = document.getElementById('success-panel');
 const successName = document.getElementById('successName');
+const closedPanel = document.getElementById('closed-panel');
 
 const SUPABASE_FUNCTION_URL = 'https://esuueahaoporkdyurwjr.supabase.co/functions/v1/register-participant';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVzdXVlYWhhb3BvcmtkeXVyd2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4ODA1NDMsImV4cCI6MjEwMjQ1NjU0M30.kHYPaCCq8VkDeSAqqBDjguMtbKqTDgJWbtuQqbut_6c';
+const SUPABASE_URL = 'https://esuueahaoporkdyurwjr.supabase.co';
+
+// Check whether online registration is currently open before showing the form.
+// Toggling this is entirely controlled from the database (events.registration_open),
+// no code changes needed to turn registration back on later.
+(async function checkRegistrationOpen() {
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/events?select=registration_open&order=created_at.desc&limit=1`,
+      { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
+    );
+    const events = await response.json();
+    const isOpen = Array.isArray(events) && events.length > 0 && events[0].registration_open === true;
+
+    if (!isOpen) {
+      form.hidden = true;
+      closedPanel.hidden = false;
+    }
+  } catch (err) {
+    // If the check itself fails, default to showing the form rather than
+    // silently locking people out due to an unrelated network hiccup.
+    console.error('Could not check registration status:', err);
+  }
+})();
 
 function setError(fieldEl, hasError) {
   fieldEl.classList.toggle('has-error', hasError);
@@ -94,7 +119,7 @@ form.addEventListener('submit', async function (e) {
       return;
     }
 
-    // Success but this is now a PENDING submission, not an instantly confirmed ticket.
+    // Success, but this is now a PENDING submission, not an instantly confirmed ticket.
     // Show the reference ID and set expectations that review/confirmation follows.
     successName.textContent = payload.fullName.split(' ')[0];
     const regIdEl = document.getElementById('registrationId');
