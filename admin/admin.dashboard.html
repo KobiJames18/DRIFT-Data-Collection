@@ -35,6 +35,7 @@
       <button class="tab-btn" data-tab="checkin">Door Check-In</button>
       <button class="tab-btn" data-tab="generate">Generate Tickets</button>
       <button class="tab-btn" data-tab="staff">Staff Accounts</button>
+      <button class="tab-btn" data-tab="activity">Staff Activity</button>
     </div>
     <div class="sidebar-footer">
       <span id="admin-email" class="mono admin-email-tag"></span>
@@ -104,6 +105,22 @@
         <tbody id="recent-checkins-tbody"></tbody>
       </table>
     </div>
+
+    <h3 style="font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray); margin: 32px 0 14px;">Staff Activity</h3>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Staff Member</th>
+            <th>Role</th>
+            <th>People Checked In</th>
+            <th>First Check-In</th>
+            <th>Last Check-In</th>
+          </tr>
+        </thead>
+        <tbody id="staff-activity-tbody"></tbody>
+      </table>
+    </div>
   </section>
 
   <section class="table-scroll" id="participants-panel">
@@ -171,7 +188,7 @@
 
   <section id="generate-panel" hidden class="checkin-panel">
     <p style="color: var(--gray); font-size: 13px; margin-bottom: 20px; text-align: center;">
-      Generate physical tickets before printing/selling them. Each gets a random code, a hidden 6-digit PIN, and a QR the PIN only appears once, right here, so write it down or print immediately.
+      Generate physical tickets before printing/selling them. Each gets a random code, a hidden 6 digit PIN, and a QR the PIN only appears once, right here, so write it down or print immediately.
     </p>
     <div class="checkin-search-row">
       <input type="text" id="generate-count-input" class="search-box" placeholder="How many tickets? e.g. 20" value="10">
@@ -202,6 +219,40 @@
     <p class="form-note" id="staff-create-error" style="color: var(--red); display: none;"></p>
     <button class="btn" id="staff-create-btn" style="width: 100%;">Create Account</button>
     <div id="staff-create-result"></div>
+  </section>
+
+  <section id="activity-panel" hidden>
+    <h2 style="font-family: 'Anton', sans-serif; font-size: 22px; margin-bottom: 16px;">Check-ins by staff member</h2>
+    <div class="table-scroll" style="margin-bottom: 32px;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Staff</th>
+            <th>Role</th>
+            <th>Valid check-ins</th>
+            <th>Invalid attempts</th>
+            <th>Last active</th>
+          </tr>
+        </thead>
+        <tbody id="staff-summary-tbody"></tbody>
+      </table>
+    </div>
+
+    <h2 style="font-family: 'Anton', sans-serif; font-size: 22px; margin-bottom: 16px;">Full scan log</h2>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Staff</th>
+            <th>Ticket / ID</th>
+            <th>Result</th>
+            <th>Reason</th>
+          </tr>
+        </thead>
+        <tbody id="activity-log-tbody"></tbody>
+      </table>
+    </div>
   </section>
 
 </main>
@@ -291,8 +342,8 @@
     <div class="modal-field">
       <label for="sponsor-active">Active</label>
       <select id="sponsor-active">
-        <option value="true">Yes — show on site</option>
-        <option value="false">No — hidden</option>
+        <option value="true">Yes show on site</option>
+        <option value="false">No hidden</option>
       </select>
     </div>
     <p class="form-note" id="sponsor-error" style="color: var(--red); display: none;"></p>
