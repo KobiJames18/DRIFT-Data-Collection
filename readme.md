@@ -20,6 +20,8 @@ This project serves one purpose: it's the actual live system used to run DRI-FT 
 - Secure Supabase backend, Row Level Security locking data down at every table
 - Admin login with lockout protection, plus a full admin dashboard (sidebar navigation) for managing registrants, volunteers, sponsors, and tickets
 - Door check in tool with a QR camera scanner, usable by both full admins and dedicated scanner only staff accounts
+- Staff Activity tracking: see exactly who checked in how many people, and when, per staff member
+- Scanner accounts automatically sign out after 2 hours of inactivity, so an unattended device at the door does not stay logged in indefinitely
 - Dashboard analytics: live stats, registration and check in charts, and a recent check ins table
 - Dynamic sponsor management: admins add sponsors from the dashboard, logos appear automatically on the homepage and site footer
 - Legal pages: Privacy Policy, Terms of Service, FAQ, custom 404 page
@@ -37,6 +39,8 @@ This is an actively developed project. Right now:
 - In person cash ticket sales from the admin dashboard, confirmed instantly since payment already happened face to face
 - Admin dashboard with a sidebar layout: Dashboard analytics, Registrants, Volunteers, Sponsors, Door Check In, Generate Tickets, and Staff Accounts tabs
 - Scanner only staff accounts: door staff can check people in without any access to registrant data, editing, or deletion
+- Staff Activity view on the Dashboard tab: per staff member check in counts and timestamps
+- Scanner accounts auto sign out after 2 hours of no activity
 - Row Level Security on every table; the public can only submit their own registration or application; only authenticated admins can view, edit, approve, reject, or delete records
 - Admin login with account lockout after repeated failed attempts, plus request size limits on every Edge Function
 - Privacy Policy, Terms of Service, custom 404 page, and FAQ, all linked from the site nav and footer
@@ -44,6 +48,7 @@ This is an actively developed project. Right now:
 
 **In progress**
 - Full offline capable door scanning (current scanner requires an internet connection)
+- Online registration is currently disabled (toggled off in the database); the site directs people to Activate Ticket and Volunteer instead, and can be switched back on with no code changes when needed
 - Duplicate registration blocking (same email or phone) at the database level
 - CAPTCHA (deferred, not urgent for current scale)
 
