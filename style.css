@@ -410,7 +410,7 @@
 
   .details-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 1px;
     background: var(--line);
     border: 1px solid var(--line);
@@ -440,7 +440,6 @@
   }
 
   .detail-card:nth-child(2) .v { color: var(--red); }
-  .detail-card:nth-child(3) .v { color: var(--blue); }
 
   @media (max-width: 720px) {
     .details-grid { grid-template-columns: 1fr; }
