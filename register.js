@@ -72,12 +72,6 @@ form.addEventListener('submit', async function (e) {
     if (!ok) isValid = false;
   });
 
-  // Age confirmation checkbox
-  const ageCheckbox = form.elements['ageConfirm'];
-  const ageField = ageCheckbox.closest('.checkbox-field');
-  setError(ageField, !ageCheckbox.checked);
-  if (!ageCheckbox.checked) isValid = false;
-
   if (!isValid) {
     const firstError = form.querySelector('.has-error');
     if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -96,7 +90,6 @@ form.addEventListener('submit', async function (e) {
     gender: form.elements['gender'].value,
     org: form.elements['org'].value.trim(),
     location: form.elements['location'].value.trim(),
-    ageConfirm: form.elements['ageConfirm'].checked,
     website: form.elements['website'].value, // honeypot, should be empty
   };
 
@@ -149,10 +142,4 @@ form.addEventListener('submit', async function (e) {
       setError(input.closest('.field'), false);
     }
   });
-});
-
-form.elements['ageConfirm'].addEventListener('change', function () {
-  if (this.checked) {
-    setError(this.closest('.checkbox-field'), false);
-  }
 });
