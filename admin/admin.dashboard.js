@@ -20,7 +20,6 @@ const checkinPanel = document.getElementById('checkin-panel');
 const generatePanel = document.getElementById('generate-panel');
 const dashboardPanel = document.getElementById('dashboard-panel');
 const staffPanel = document.getElementById('staff-panel');
-const activityPanel = document.getElementById('activity-panel');
 const participantsTbody = document.getElementById('participants-tbody');
 const volunteersTbody = document.getElementById('volunteers-tbody');
 const sponsorsTbody = document.getElementById('sponsors-tbody');
@@ -86,7 +85,7 @@ async function loadAllData() {
   checkedInIds = new Set((checkInsRes.data || []).map((c) => c.participant_id));
   sponsorsData = sponsorsRes.data || [];
 
-  // Old top-level stat-strip removed, the Dashboard tab now shows more detailed
+  // Old top level stat strip removed, the Dashboard tab now shows more detailed
   // stats (Total Registered, Checked In, Not Checked In, Invalid Scans) instead.
 
   renderCurrentTab();
@@ -145,7 +144,6 @@ function renderCurrentTab() {
   generatePanel.hidden = true;
   dashboardPanel.hidden = true;
   staffPanel.hidden = true;
-  activityPanel.hidden = true;
   emptyState.hidden = true;
 
   if (currentTab === 'dashboard') {
@@ -166,10 +164,7 @@ function renderCurrentTab() {
   } else if (currentTab === 'staff') {
     staffPanel.hidden = false;
     loadingState.hidden = true;
-  } else if (currentTab === 'activity') {
-    activityPanel.hidden = false;
-    loadingState.hidden = true;
-    renderStaffActivity();
+    loadStaffActivity();
   }
 }
 
@@ -767,7 +762,7 @@ scanToggleBtn.addEventListener('click', async () => {
         await stopQrScanner();
         performCheckinSearch();
       },
-      () => {} // ignore per frame scan failures, this fires constantly while searching for a code
+      () => {} // ignore per-frame scan failures, this fires constantly while searching for a code
     );
   } catch (err) {
     console.error('Camera start failed:', err);
@@ -791,64 +786,6 @@ async function stopQrScanner() {
 }
 
 // ---------- STAFF ACTIVITY ----------
-async function renderStaffActivity() {
-  const summaryTbody = document.getElementById('staff-summary-tbody');
-  const logTbody = document.getElementById('activity-log-tbody');
-  summaryTbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--gray);">Loading...</td></tr>';
-  logTbody.innerHTML = '';
-
-  const { data: staffList } = await supabaseClient.from('admins').select('id, email, role');
-
-  const { data: logs, error } = await supabaseClient
-    .from('scan_logs')
-    .select('ticket_code, scan_result, reason, scanned_by, scanned_at')
-    .order('scanned_at', { ascending: false })
-    .limit(300);
-
-  if (error || !staffList) {
-    summaryTbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--red);">Could not load activity.</td></tr>';
-    return;
-  }
-
-  // Build per-staff counts from the log
-  const staffMap = {};
-  staffList.forEach((s) => {
-    staffMap[s.id] = { email: s.email, role: s.role, valid: 0, invalid: 0, lastActive: null };
-  });
-
-  (logs || []).forEach((log) => {
-    const entry = staffMap[log.scanned_by];
-    if (!entry) return;
-    if (log.scan_result === 'valid') entry.valid += 1;
-    else entry.invalid += 1;
-    if (!entry.lastActive || log.scanned_at > entry.lastActive) entry.lastActive = log.scanned_at;
-  });
-
-  const summaryRows = Object.values(staffMap);
-  summaryTbody.innerHTML = summaryRows.length === 0
-    ? '<tr><td colspan="5" style="text-align:center; color: var(--gray);">No staff accounts yet.</td></tr>'
-    : summaryRows.map((s) => `
-      <tr>
-        <td>${escapeHtml(s.email)}</td>
-        <td><span class="status-pill ${s.role === 'admin' ? 'status-approved' : 'status-pending'}">${escapeHtml(s.role)}</span></td>
-        <td>${s.valid}</td>
-        <td>${s.invalid}</td>
-        <td>${s.lastActive ? new Date(s.lastActive).toLocaleString() : 'Never'}</td>
-      </tr>
-    `).join('');
-
-  logTbody.innerHTML = (!logs || logs.length === 0)
-    ? '<tr><td colspan="5" style="text-align:center; color: var(--gray);">No scan activity yet.</td></tr>'
-    : logs.map((log) => `
-      <tr>
-        <td>${new Date(log.scanned_at).toLocaleString()}</td>
-        <td>${escapeHtml(staffMap[log.scanned_by]?.email || 'Unknown')}</td>
-        <td class="mono">${escapeHtml(log.ticket_code || '—')}</td>
-        <td><span class="status-pill ${log.scan_result === 'valid' ? 'status-approved' : 'status-cancelled'}">${escapeHtml(log.scan_result)}</span></td>
-        <td>${escapeHtml(log.reason || '—')}</td>
-      </tr>
-    `).join('');
-}
 
 // ---------- STAFF ACCOUNTS ----------
 document.getElementById('staff-create-btn').addEventListener('click', async () => {
@@ -892,9 +829,10 @@ document.getElementById('staff-create-btn').addEventListener('click', async () =
       return;
     }
 
-    resultBox.innerHTML = `<p style="color: #2fd15a; font-family: 'Space Mono', monospace; font-size: 13px; margin-top: 16px; text-align: center;">✓ ${escapeHtml(role)} account created for ${escapeHtml(email)}. Share the login and password with them directly — this won't be shown again.</p>`;
+    resultBox.innerHTML = `<p style="color: #2fd15a; font-family: 'Space Mono', monospace; font-size: 13px; margin-top: 16px; text-align: center;">Account created for ${escapeHtml(email)} as ${escapeHtml(role)}. Share the login and password with them directly, this won't be shown again.</p>`;
     document.getElementById('staff-email-input').value = '';
     document.getElementById('staff-password-input').value = '';
+    loadStaffActivity();
   } catch (err) {
     createBtn.disabled = false;
     createBtn.textContent = 'Create Account';
@@ -902,6 +840,62 @@ document.getElementById('staff-create-btn').addEventListener('click', async () =
     errorBox.style.display = 'block';
   }
 });
+
+// ---------- STAFF ACTIVITY (all staff, including those with zero activity) ----------
+async function loadStaffActivity() {
+  const summaryBody = document.getElementById('staff-summary-tbody');
+  const logBody = document.getElementById('activity-log-tbody');
+  summaryBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--gray);">Loading...</td></tr>';
+
+  const [staffRes, logsRes] = await Promise.all([
+    supabaseClient.from('admins').select('id, email, role').order('created_at', { ascending: true }),
+    supabaseClient.from('scan_logs').select('scanned_at, ticket_code, scan_result, reason, scanned_by, admins(email)').order('scanned_at', { ascending: false }).limit(500),
+  ]);
+
+  const staffList = staffRes.data || [];
+  const logs = logsRes.data || [];
+
+  // Build a per staff summary, starting from EVERY staff account, not just ones who
+  // already appear in the logs, so accounts with zero activity still show up clearly.
+  const summary = {};
+  staffList.forEach((s) => {
+    summary[s.id] = { email: s.email, role: s.role, valid: 0, invalid: 0, last: null };
+  });
+
+  logs.forEach((log) => {
+    const s = summary[log.scanned_by];
+    if (!s) return;
+    if (log.scan_result === 'valid') s.valid += 1;
+    else s.invalid += 1;
+    if (!s.last || log.scanned_at > s.last) s.last = log.scanned_at;
+  });
+
+  const summaryRows = Object.values(summary).sort((a, b) => b.valid - a.valid);
+
+  summaryBody.innerHTML = summaryRows.length === 0
+    ? '<tr><td colspan="5" style="text-align:center; color: var(--gray);">No staff accounts yet.</td></tr>'
+    : summaryRows.map((s) => `
+      <tr>
+        <td>${escapeHtml(s.email)}</td>
+        <td><span class="status-pill ${s.role === 'admin' ? 'status-approved' : 'status-pending'}">${escapeHtml(s.role)}</span></td>
+        <td>${s.valid}</td>
+        <td>${s.invalid}</td>
+        <td>${s.last ? new Date(s.last).toLocaleString() : 'Never active'}</td>
+      </tr>
+    `).join('');
+
+  logBody.innerHTML = logs.length === 0
+    ? '<tr><td colspan="5" style="text-align:center; color: var(--gray);">No scan activity yet.</td></tr>'
+    : logs.map((log) => `
+      <tr>
+        <td>${new Date(log.scanned_at).toLocaleString()}</td>
+        <td>${escapeHtml(log.admins?.email || 'System')}</td>
+        <td class="mono">${escapeHtml(log.ticket_code || '—')}</td>
+        <td><span class="status-pill ${log.scan_result === 'valid' ? 'status-approved' : 'status-cancelled'}">${escapeHtml(log.scan_result)}</span></td>
+        <td>${escapeHtml(log.reason || '—')}</td>
+      </tr>
+    `).join('');
+}
 
 // ---------- GENERATE TICKETS ----------
 document.getElementById('generate-tickets-btn').addEventListener('click', async () => {
@@ -934,7 +928,7 @@ document.getElementById('generate-tickets-btn').addEventListener('click', async 
 
   resultDiv.innerHTML = `
     <p style="color: var(--red); font-family: 'Space Mono', monospace; font-size: 12px; text-align: center; margin-bottom: 20px;">
-      ⚠ These PINs are shown ONCE. Print or record them now they cannot be retrieved again after you leave this page.
+      ⚠ These PINs are shown ONCE. Print or record them now — they cannot be retrieved again after you leave this page.
     </p>
     <div id="ticket-print-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
       ${data.map((t) => `
@@ -1047,7 +1041,7 @@ function renderRecentCheckinsTable(rows) {
 }
 
 function renderLineChart(checkins) {
-  // Build a day-by-day count for the last 7 days, for both registrations and check-ins
+  // Build a day by day count for the last 7 days, for both registrations and check-ins
   const days = [];
   for (let i = 6; i >= 0; i--) {
     const d = new Date();
@@ -1095,7 +1089,7 @@ function renderBarChart(checkins) {
   );
 
   // Only show hours that have any activity across the whole day, plus a little padding,
-  // so the chart isn't 24 mostly-empty bars before the event has really started.
+  // so the chart isn't 24 mostly empty bars before the event has really started.
   const firstActive = countsByHour.findIndex((c) => c > 0);
   const startHour = firstActive === -1 ? 17 : Math.max(firstActive - 1, 0);
   const visibleHours = hours.slice(startHour, startHour + 8);
