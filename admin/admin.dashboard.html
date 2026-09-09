@@ -176,7 +176,7 @@
 
   <section id="checkin-panel" hidden class="checkin-panel">
     <div class="checkin-search-row">
-      <input type="text" id="checkin-search-input" class="search-box" placeholder="Enter registration ID, e.g. DR-J027-0001">
+      <input type="text" id="checkin-search-input" class="search-box" placeholder="Enter registration ID, e.g. DRIFT-JAN2027-0001">
       <button class="btn" id="checkin-search-btn">Find</button>
     </div>
     <div class="checkin-scan-row">
@@ -188,7 +188,7 @@
 
   <section id="generate-panel" hidden class="checkin-panel">
     <p style="color: var(--gray); font-size: 13px; margin-bottom: 20px; text-align: center;">
-      Generate physical tickets before printing/selling them. Each gets a random code, a hidden 6 digit PIN, and a QR the PIN only appears once, right here, so write it down or print immediately.
+      Generate physical tickets before printing/selling them. Each gets a random code, a hidden 6-digit PIN, and a QR the PIN only appears once, right here, so write it down or print immediately.
     </p>
     <div class="checkin-search-row">
       <input type="text" id="generate-count-input" class="search-box" placeholder="How many tickets? e.g. 20" value="10">
@@ -219,10 +219,8 @@
     <p class="form-note" id="staff-create-error" style="color: var(--red); display: none;"></p>
     <button class="btn" id="staff-create-btn" style="width: 100%;">Create Account</button>
     <div id="staff-create-result"></div>
-  </section>
 
-  <section id="activity-panel" hidden>
-    <h2 style="font-family: 'Anton', sans-serif; font-size: 22px; margin-bottom: 16px;">Check-ins by staff member</h2>
+    <h2 style="font-family: 'Anton', sans-serif; font-size: 22px; margin: 40px 0 16px;">All staff accounts</h2>
     <div class="table-scroll" style="margin-bottom: 32px;">
       <table class="data-table">
         <thead>
