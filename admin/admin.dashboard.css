@@ -62,6 +62,32 @@
   word-break: break-all;
 }
 
+/* scanner.html still uses the classic nav + nav-links pattern (not the sidebar),
+   and has no hamburger button to reveal nav-links on mobile like the public
+   site does. Keep it visible inline instead, so Log Out is always reachable. */
+@media (max-width: 720px) {
+  nav .nav-links {
+    position: static;
+    height: auto;
+    width: auto;
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 0;
+    border-left: none;
+    transform: none;
+    font-size: 12px;
+  }
+
+  nav .admin-email-tag {
+    display: none;
+  }
+}
+
 .sidebar-footer #logout-link {
   font-family: 'Space Mono', monospace;
   font-size: 12px;
@@ -384,6 +410,7 @@
 
 .checkin-search-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 24px;
 }
