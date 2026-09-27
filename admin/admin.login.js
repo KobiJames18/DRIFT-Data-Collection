@@ -1,5 +1,6 @@
 const SUPABASE_URL = 'https://esuueahaoporkdyurwjr.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVzdXVlYWhhb3BvcmtkeXVyd2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4ODA1NDMsImV4cCI6MjEwMjQ1NjU0M30.kHYPaCCq8VkDeSAqqBDjguMtbKqTDgJWbtuQqbut_6c';
+const STAFF_LOGIN_URL = 'https://esuueahaoporkdyurwjr.supabase.co/functions/v1/staff-login';
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -15,18 +16,18 @@ function hideError() {
   errorBox.style.display = 'none';
 }
 
-// If already logged in AND actually an admin, skip straight to the dashboard
+// If already logged in AND actually staff, skip straight to the right screen for their role
 (async function checkExistingSession() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (session) {
     const { data: adminRow } = await supabaseClient
       .from('admins')
-      .select('id')
+      .select('id, role')
       .eq('id', session.user.id)
       .maybeSingle();
 
     if (adminRow) {
-      window.location.href = 'admin.dashboard.html';
+      window.location.href = adminRow.role === 'scanner' ? 'scanner.html' : 'admin.dashboard.html';
     }
   }
 })();
@@ -53,52 +54,47 @@ form.addEventListener('submit', async function (e) {
   submitBtn.disabled = true;
   submitBtn.textContent = 'Signing in...';
 
-  // Check if this email is currently locked out from too many recent failed attempts
-  const { data: allowed, error: lockoutCheckError } = await supabaseClient.rpc('check_login_lockout', {
-    p_email: email,
-    p_max_failures: 5,
-    p_window_minutes: 15,
-  });
+  // The entire login (lockout check, then authentication) now happens inside
+  // one Edge Function. There is no separate client side path to sign in, so
+  // the lockout check cannot be skipped or bypassed by calling Supabase Auth
+  // directly, unlike the previous two-call design.
+  try {
+    const response = await fetch(STAFF_LOGIN_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify({ email, password }),
+    });
+    const result = await response.json();
 
-  if (lockoutCheckError) {
-    showError('Something went wrong. Please try again.');
+    if (!response.ok) {
+      showError(result.error || 'Something went wrong. Please try again.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign In';
+      return;
+    }
+
+    // Establish the actual client side session using the tokens the function
+    // already validated server side.
+    const { error: sessionError } = await supabaseClient.auth.setSession({
+      access_token: result.access_token,
+      refresh_token: result.refresh_token,
+    });
+
+    if (sessionError) {
+      showError('Something went wrong signing you in. Please try again.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign In';
+      return;
+    }
+
+    window.location.href = result.role === 'scanner' ? 'scanner.html' : 'admin.dashboard.html';
+  } catch (err) {
+    console.error('Login failed:', err);
+    showError('Could not connect. Please check your internet connection and try again.');
     submitBtn.disabled = false;
     submitBtn.textContent = 'Sign In';
-    return;
   }
-
-  if (!allowed) {
-    showError('Too many failed attempts. Please wait 15 minutes and try again.');
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Sign In';
-    return;
-  }
-
-  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-  if (error) {
-    await supabaseClient.rpc('log_failed_login', { p_email: email });
-    showError('Incorrect email or password.');
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Sign In';
-    return;
-  }
-
-  // Login succeeded but only people listed in the admins table are allowed in.
-  // This is a UX check only; the real enforcement is server side via RLS on every table.
-  const { data: adminRow, error: adminCheckError } = await supabaseClient
-    .from('admins')
-    .select('id')
-    .eq('id', data.user.id)
-    .maybeSingle();
-
-  if (adminCheckError || !adminRow) {
-    await supabaseClient.auth.signOut();
-    showError('This account is not authorized for admin access.');
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Sign In';
-    return;
-  }
-
-  window.location.href = 'admin.dashboard.html';
-});
+})
